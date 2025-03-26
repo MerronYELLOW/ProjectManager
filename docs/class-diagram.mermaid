@@ -1,0 +1,152 @@
+classDiagram
+    class User {
+        +Long id
+        +String email
+        +String password
+        +String name
+        +Team team
+        +Role role
+        +List~Project~ projects
+        +changePassword(String newPassword)
+        +updateProfile(UserDTO userDetails)
+        +assignToProject(Project project)
+        +removeFromProject(Project project)
+        +hasRole(Role role)
+    }
+
+    class Team {
+        +Long id
+        +String name
+        +User supervisor
+        +List~User~ members
+        +addMember(User user)
+        +removeMember(User user)
+        +getSupervisor()
+        +listMembers()
+    }
+
+    class Project {
+        +Long id
+        +String name
+        +String description
+        +ProjectStatus status
+        +User projectLead
+        +List~User~ assignedUsers
+        +LocalDate dueDate
+        +ProjectImportance importance
+        +List~Task~ tasks
+        +createTask(TaskDTO taskDetails)
+        +assignUsers(List~User~ users)
+        +closeProject()
+        +updateProjectDetails(ProjectDTO projectDetails)
+        +addProjectDocument(Document document)
+    }
+
+    class Task {
+        +Long id
+        +String name
+        +String description
+        +TaskStatus status
+        +User assignee
+        +User supervisor
+        +LocalDate dueDate
+        +TaskImportance importance
+        +List~TaskStep~ steps
+        +submitTask(String completionNote)
+        +addStep(TaskStep step)
+        +approveTask(boolean isApproved, String feedback)
+        +updateTaskDetails(TaskDTO taskDetails)
+    }
+
+    class TaskStep {
+        +Long id
+        +String description
+        +boolean completed
+        +LocalDateTime completedAt
+        +markCompleted(User completedBy)
+        +updateDescription(String newDescription)
+    }
+
+    class Schedule {
+        +Long id
+        +Project project
+        +List~ScheduleEvent~ events
+        +addEvent(ScheduleEvent event)
+        +removeEvent(ScheduleEvent event)
+        +getUpcomingEvents()
+        +generateProjectTimeline()
+    }
+
+    class ScheduleEvent {
+        +Long id
+        +String description
+        +LocalDateTime dateTime
+        +EventType type
+        +User createdBy
+        +updateEventDetails(ScheduleEventDTO eventDetails)
+    }
+
+    class Document {
+        +Long id
+        +String name
+        +String fileUrl
+        +User uploadedBy
+        +LocalDateTime uploadedAt
+        +downloadDocument()
+    }
+
+    class Role {
+        <<enumeration>>
+        EMPLOYEE
+        PROJECT_CREATOR
+        PROJECT_LEAD
+        DIRECT_SUPERVISOR
+        SUPER_USER
+        ADMIN
+    }
+
+    class ProjectStatus {
+        <<enumeration>>
+        PENDING
+        IN_PROGRESS
+        COMPLETED
+        CANCELLED
+    }
+
+    class TaskStatus {
+        <<enumeration>>
+        TODO
+        IN_PROGRESS
+        UNDER_REVIEW
+        COMPLETED
+        REJECTED
+    }
+
+    class TaskImportance {
+        <<enumeration>>
+        LOW
+        MEDIUM
+        HIGH
+        CRITICAL
+    }
+
+    class ProjectImportance {
+        <<enumeration>>
+        LOW
+        MEDIUM
+        HIGH
+        STRATEGIC
+    }
+
+    User "1" -- "1" Team : belongs to
+    User "1" -- "*" Project : can create/participate
+    Project "1" -- "*" Task : contains
+    Task "1" -- "*" TaskStep : divided into
+    Project "1" -- "1" Schedule : has
+    Schedule "1" -- "*" ScheduleEvent : includes
+    Project "1" -- "*" Document : has
+    User ..> Role : has
+    Project ..> ProjectStatus : has
+    Task ..> TaskStatus : has
+    Task ..> TaskImportance : has
+    Project ..> ProjectImportance : has
