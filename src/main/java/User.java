@@ -1,8 +1,7 @@
 import jakarta.persistence.*;
 import lombok.Data;
-import src.main.java.enums.Enums.Role;
-
 import java.util.List;
+import enums.Enums.Role
 
 @Data
 @Entity
@@ -31,10 +30,7 @@ public class User {
     @ManyToMany(mappedBy = "assignedUsers")
     private List<Project> projects;
 
-    public void changePassword(String newPassword) {
-        // Password hashing logic
-        this.password = passwordEncoder.encode(newPassword);
-    }
+
 
     public void updateProfile(UserDTO userDetails) {
         this.name = userDetails.getName();

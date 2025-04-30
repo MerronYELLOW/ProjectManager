@@ -1,7 +1,6 @@
+import src.main.java.enums.Enums.EventType;
 import jakarta.persistence.*;
 import lombok.Data;
-import src.main.java.enums.Enums.EventType;
-
 import java.time.LocalDateTime;
 
 @Data

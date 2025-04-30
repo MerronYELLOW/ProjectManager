@@ -1,4 +1,4 @@
-package src.main.java.enums;
+package enums;
 
 public class Enums {
     public enum Role {

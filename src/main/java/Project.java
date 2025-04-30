@@ -1,9 +1,6 @@
 import jakarta.persistence.*;
 import lombok.Data;
-import src.main.java.enums.Enums;
-import src.main.java.enums.Enums.ProjectImportance;
-import src.main.java.enums.Enums.ProjectStatus;
-import src.main.java.enums.Enums.TaskStatus;
+import enums.Enums ;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,10 +21,10 @@ public class Project {
     private String description;
 
     @Enumerated(EnumType.STRING)
-    private ProjectStatus status;
+    private Enums.ProjectStatus status;
 
     @Enumerated(EnumType.STRING)
-    private ProjectImportance importance;
+    private Enums.ProjectImportance importance;
 
     @ManyToOne
     @JoinColumn(name = "project_lead_id")
@@ -61,7 +58,7 @@ public class Project {
         task.setDueDate(taskDetails.getDueDate());
         task.setImportance(taskDetails.getImportance());
         task.setProject(this);
-        task.setStatus(TaskStatus.TODO);
+        task.setStatus(Enums.TaskStatus.TODO);
         this.tasks.add(task);
         return task;
     }

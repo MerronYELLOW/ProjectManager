@@ -1,8 +1,7 @@
+import enums.Enums.TaskStatus;
+import enums.Enums.TaskImportance;
 import jakarta.persistence.*;
 import lombok.Data;
-import src.main.java.enums.Enums.TaskImportance;
-import src.main.java.enums.Enums.TaskStatus;
-
 import java.time.LocalDate;
 import java.util.List;
 
