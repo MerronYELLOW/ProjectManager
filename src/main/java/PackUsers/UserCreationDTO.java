@@ -1,6 +1,6 @@
 package PackUsers;
 
-import com.example.projectmanagement.model.Role;
+import enums.Enums.Role;
 import lombok.Data;
 
 import javax.validation.constraints.Email;

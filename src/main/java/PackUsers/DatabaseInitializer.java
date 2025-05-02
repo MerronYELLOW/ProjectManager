@@ -1,8 +1,6 @@
 package PackUsers;
 
-import com.example.projectmanagement.model.Role;
-import com.example.projectmanagement.model.User;
-import com.example.projectmanagement.repository.UserRepository;
+import enums.Enums.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
