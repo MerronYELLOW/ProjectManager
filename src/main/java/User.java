@@ -1,8 +1,7 @@
 import jakarta.persistence.*;
 import lombok.Data;
-import src.main.java.enums.Enums.Role;
-
 import java.util.List;
+import enums.Enums.Role;
 
 @Data
 @Entity
