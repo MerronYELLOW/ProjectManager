@@ -29,32 +29,32 @@ project-management-platform/
 │   │   │   ├── controller/
 │   │   │   │   ├── ProjectController.java
 │   │   │   │   ├── TaskController.java
-│   │   │   │   ├── UserController.java
+│   │   │   │   ├── PackUsers.UserController.java
 │   │   │   │   └── ScheduleController.java
 │   │   │   │
 │   │   │   ├── service/
 │   │   │   │   ├── ProjectService.java
 │   │   │   │   ├── TaskService.java
-│   │   │   │   ├── UserService.java
+│   │   │   │   ├── PackUsers.UserService.java
 │   │   │   │   └── ScheduleService.java
 │   │   │   │
 │   │   │   ├── repository/
 │   │   │   │   ├── ProjectRepository.java
 │   │   │   │   ├── TaskRepository.java
-│   │   │   │   ├── UserRepository.java
+│   │   │   │   ├── PackUsers.UserRepository.java
 │   │   │   │   └── ScheduleRepository.java
 │   │   │   │
 │   │   │   ├── model/
 │   │   │   │   ├── Project.java
 │   │   │   │   ├── Task.java
 │   │   │   │   ├── User.java
-│   │   │   │   ├── Team.java
+│   │   │   │   ├── PackUsers.Team.java
 │   │   │   │   └── Schedule.java
 │   │   │   │
 │   │   │   └── dto/
 │   │   │       ├── ProjectDTO.java
 │   │   │       ├── TaskDTO.java
-│   │   │       └── UserDTO.java
+│   │   │       └── PackUsers.UserDTO.java
 │   │   │
 │   │   └── resources/
 │   │       ├── application.properties
@@ -72,7 +72,7 @@ project-management-platform/
 ## Key Features
 - Role-based Access Control
 - Project and Task Management
-- Team Collaboration
+- PackUsers.Team Collaboration
 - Schedule and Calendar Management
 - User Authentication and Authorization
 

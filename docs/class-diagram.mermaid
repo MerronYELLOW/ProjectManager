@@ -4,17 +4,17 @@ classDiagram
         +String email
         +String password
         +String name
-        +Team team
+        +PackUsers.Team team
         +Role role
         +List~Project~ projects
         +changePassword(String newPassword)
-        +updateProfile(UserDTO userDetails)
+        +updateProfile(PackUsers.UserDTO userDetails)
         +assignToProject(Project project)
         +removeFromProject(Project project)
         +hasRole(Role role)
     }
 
-    class Team {
+    class PackUsers.Team {
         +Long id
         +String name
         +User supervisor
@@ -138,7 +138,7 @@ classDiagram
         STRATEGIC
     }
 
-    User "1" -- "1" Team : belongs to
+    User "1" -- "1" PackUsers.Team : belongs to
     User "1" -- "*" Project : can create/participate
     Project "1" -- "*" Task : contains
     Task "1" -- "*" TaskStep : divided into
