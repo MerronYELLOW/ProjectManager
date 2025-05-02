@@ -1,6 +1,6 @@
 package PackUsers;
-import com.example.projectmanagement.model.User;
-import com.example.projectmanagement.repository.UserRepository;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
