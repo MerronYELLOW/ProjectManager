@@ -1,3 +1,6 @@
+
+import src.main.java.enums.Enums.EventType;
+import enums.Enums.EventType;
 import jakarta.persistence.*;
 import lombok.Data;
 import src.main.java.enums.Enums.EventType;
