@@ -1,12 +1,19 @@
-import jakarta.persistence.*;
-import lombok.Data;
-import java.util.List;
-import enums.Enums.Role;
+package PackUsers;
 
-@Data
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "users")
+@Data
+@NoArgsConstructor
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,28 +35,25 @@ public class User {
     private Role role;
 
     @ManyToMany(mappedBy = "assignedUsers")
-    private List<Project> projects;
+    private List<Project> projects = new ArrayList<>();
 
     public void changePassword(String newPassword) {
-        // Password hashing logic
-        this.password = passwordEncoder.encode(newPassword);
+        this.password = newPassword;
     }
 
     public void updateProfile(UserDTO userDetails) {
         this.name = userDetails.getName();
-        this.email = userDetails.getEmail();
+        // inne pola które chcemy zaktualizować
     }
 
     public void assignToProject(Project project) {
-        if (!this.projects.contains(project)) {
-            this.projects.add(project);
-            project.getAssignedUsers().add(this);
+        if (!projects.contains(project)) {
+            projects.add(project);
         }
     }
 
     public void removeFromProject(Project project) {
-        this.projects.remove(project);
-        project.getAssignedUsers().remove(this);
+        projects.remove(project);
     }
 
     public boolean hasRole(Role role) {
