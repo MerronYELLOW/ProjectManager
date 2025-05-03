@@ -10,18 +10,18 @@ import javax.validation.constraints.NotNull;
 @Data
 public class UserCreationDTO {
 
-    @NotBlank(message = "Email jest wymagany")
-    @Email(message = "Niepoprawny format adresu email")
+    @NotBlank(message = "Email is invalid")
+    @Email(message = "Wrong email format")
     private String email;
 
-    @NotBlank(message = "Hasło jest wymagane")
+    @NotBlank(message = "Password is required")
     private String password;
 
-    @NotBlank(message = "Imię i nazwisko jest wymagane")
+    @NotBlank(message = "Name is required")
     private String name;
 
     private Long teamId;
 
-    @NotNull(message = "Rola jest wymagana")
+    @NotNull(message = "Role is required")
     private Role role;
 }
