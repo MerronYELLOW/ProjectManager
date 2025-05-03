@@ -10,10 +10,10 @@ import java.util.List;
 public class Team {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long teamID;
 
     @Column(nullable = false, unique = true)
-    private String name;
+    private String teamName;
 
     @ManyToOne
     @JoinColumn(name = "supervisor_id")

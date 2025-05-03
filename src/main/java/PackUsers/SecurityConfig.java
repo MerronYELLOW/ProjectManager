@@ -40,8 +40,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/api/users/**").hasAnyAuthority("SUPER_USER", "ADMIN")
+                .requestMatchers("/api/users/**").hasAnyAuthority("SUPER_USER", "ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();

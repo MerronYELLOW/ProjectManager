@@ -121,7 +121,7 @@ public class UserService {
         userDTO.setRole(user.getRole());
 
         if (user.getTeam() != null) {
-            userDTO.setTeamId(user.getTeam().getId());
+            userDTO.setTeamId(user.getTeam().getTeamID());
         }
 
         return userDTO;
