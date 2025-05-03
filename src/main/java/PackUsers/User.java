@@ -6,11 +6,14 @@ import src.main.java.enums.Enums.Role;
 
 import java.util.List;
 
+import enums.Enums;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
+import Projects.Project;
+import enums.Enums.Role;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,11 +69,15 @@ public class User {
         }
     }
 
-    public void removeFromProject(Project project) {
-        projects.remove(project);
-    }
+public void removeFromProject(Long projectID) {
+    projects.removeIf(project -> project.getProjectID().equals(projectID));
+}
 
     public boolean hasRole(Role role) {
         return this.role == role;
+    }
+
+    public void setRole(Enums.Role role) {
+        this.role = role;
     }
 }

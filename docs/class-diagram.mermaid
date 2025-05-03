@@ -6,11 +6,11 @@ classDiagram
         +String name
         +PackUsers.Team team
         +Role role
-        +List~Project~ projects
+        +List~Projects~ projects
         +changePassword(String newPassword)
         +updateProfile(PackUsers.UserDTO userDetails)
-        +assignToProject(Project project)
-        +removeFromProject(Project project)
+        +assignToProject(Projects project)
+        +removeFromProject(Projects project)
         +hasRole(Role role)
     }
 
@@ -25,7 +25,7 @@ classDiagram
         +listMembers()
     }
 
-    class Project {
+    class Projects {
         +Long id
         +String name
         +String description
@@ -34,15 +34,15 @@ classDiagram
         +List~User~ assignedUsers
         +LocalDate dueDate
         +ProjectImportance importance
-        +List~Task~ tasks
-        +createTask(TaskDTO taskDetails)
+        +List~Projects.Task~ tasks
+        +createTask(Projects.TaskDTO taskDetails)
         +assignUsers(List~User~ users)
         +closeProject()
-        +updateProjectDetails(ProjectDTO projectDetails)
-        +addProjectDocument(Document document)
+        +updateProjectDetails(Projects.ProjectDTO projectDetails)
+        +addProjectDocument(Projects.Document document)
     }
 
-    class Task {
+    class Projects.Task {
         +Long id
         +String name
         +String description
@@ -51,14 +51,14 @@ classDiagram
         +User supervisor
         +LocalDate dueDate
         +TaskImportance importance
-        +List~TaskStep~ steps
+        +List~Projects.TaskStep~ steps
         +submitTask(String completionNote)
-        +addStep(TaskStep step)
+        +addStep(Projects.TaskStep step)
         +approveTask(boolean isApproved, String feedback)
-        +updateTaskDetails(TaskDTO taskDetails)
+        +updateTaskDetails(Projects.TaskDTO taskDetails)
     }
 
-    class TaskStep {
+    class Projects.TaskStep {
         +Long id
         +String description
         +boolean completed
@@ -67,26 +67,26 @@ classDiagram
         +updateDescription(String newDescription)
     }
 
-    class Schedule {
+    class Projects.Schedule {
         +Long id
-        +Project project
-        +List~ScheduleEvent~ events
-        +addEvent(ScheduleEvent event)
-        +removeEvent(ScheduleEvent event)
+        +Projects project
+        +List~Projects.ScheduleEvent~ events
+        +addEvent(Projects.ScheduleEvent event)
+        +removeEvent(Projects.ScheduleEvent event)
         +getUpcomingEvents()
         +generateProjectTimeline()
     }
 
-    class ScheduleEvent {
+    class Projects.ScheduleEvent {
         +Long id
         +String description
         +LocalDateTime dateTime
         +EventType type
         +User createdBy
-        +updateEventDetails(ScheduleEventDTO eventDetails)
+        +updateEventDetails(Projects.ScheduleEventDTO eventDetails)
     }
 
-    class Document {
+    class Projects.Document {
         +Long id
         +String name
         +String fileUrl
@@ -139,14 +139,14 @@ classDiagram
     }
 
     User "1" -- "1" PackUsers.Team : belongs to
-    User "1" -- "*" Project : can create/participate
-    Project "1" -- "*" Task : contains
-    Task "1" -- "*" TaskStep : divided into
-    Project "1" -- "1" Schedule : has
-    Schedule "1" -- "*" ScheduleEvent : includes
-    Project "1" -- "*" Document : has
+    User "1" -- "*" Projects : can create/participate
+    Projects "1" -- "*" Projects.Task : contains
+    Projects.Task "1" -- "*" Projects.TaskStep : divided into
+    Projects "1" -- "1" Projects.Schedule : has
+    Projects.Schedule "1" -- "*" Projects.ScheduleEvent : includes
+    Projects "1" -- "*" Projects.Document : has
     User ..> Role : has
-    Project ..> ProjectStatus : has
-    Task ..> TaskStatus : has
-    Task ..> TaskImportance : has
-    Project ..> ProjectImportance : has
+    Projects ..> ProjectStatus : has
+    Projects.Task ..> TaskStatus : has
+    Projects.Task ..> TaskImportance : has
+    Projects ..> ProjectImportance : has
