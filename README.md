@@ -1,8 +1,8 @@
-Project manager II, topic number 5.
+Projects manager II, topic number 5.
 
-Project authors
+Projects authors
 Maksym Krzemiński and Błażej Majewski
-# Project Management Platform
+# Projects Management Platform
 
 ## Overview
 This is a comprehensive project management system designed to streamline team collaboration, task tracking, and project management within organizations.
@@ -14,7 +14,7 @@ This is a comprehensive project management system designed to streamline team co
 - **Authentication**: Spring Security
 - **API Documentation**: Swagger
 
-## Project Structure
+## Projects Structure
 ```
 project-management-platform/
 │
@@ -45,15 +45,15 @@ project-management-platform/
 │   │   │   │   └── ScheduleRepository.java
 │   │   │   │
 │   │   │   ├── model/
-│   │   │   │   ├── Project.java
-│   │   │   │   ├── Task.java
+│   │   │   │   ├── Projects.java
+│   │   │   │   ├── Projects.Task.java
 │   │   │   │   ├── User.java
 │   │   │   │   ├── PackUsers.Team.java
-│   │   │   │   └── Schedule.java
+│   │   │   │   └── Projects.Schedule.java
 │   │   │   │
 │   │   │   └── dto/
-│   │   │       ├── ProjectDTO.java
-│   │   │       ├── TaskDTO.java
+│   │   │       ├── Projects.ProjectDTO.java
+│   │   │       ├── Projects.TaskDTO.java
 │   │   │       └── PackUsers.UserDTO.java
 │   │   │
 │   │   └── resources/
@@ -71,9 +71,9 @@ project-management-platform/
 
 ## Key Features
 - Role-based Access Control
-- Project and Task Management
+- Projects and Projects.Task Management
 - PackUsers.Team Collaboration
-- Schedule and Calendar Management
+- Projects.Schedule and Calendar Management
 - User Authentication and Authorization
 
 ## Setup and Installation
@@ -84,17 +84,17 @@ project-management-platform/
 
 ## User Roles
 - **Employee**: Basic project participation
-- **Project Creator**: Initiates and manages projects
-- **Project Lead**: Manages project lifecycle
+- **Projects Creator**: Initiates and manages projects
+- **Projects Lead**: Manages project lifecycle
 - **Direct Supervisor**: Oversees team projects
 - **Super-User**: Administrative rights
 - **Platform Administrator**: System management
 
 ## API Endpoints
-- `/api/projects`: Project management
-- `/api/tasks`: Task management
+- `/api/projects`: Projects management
+- `/api/tasks`: Projects.Task management
 - `/api/users`: User management
-- `/api/schedule`: Project scheduling
+- `/api/schedule`: Projects scheduling
 
 ## Security
 - Role-based access control

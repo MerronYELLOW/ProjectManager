@@ -1,6 +1,7 @@
 package enums;
 
 public class Enums {
+
     public enum Role {
         EMPLOYEE,
         PROJECT_CREATOR,

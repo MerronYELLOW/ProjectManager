@@ -1,3 +1,5 @@
+package Projects;
+
 import enums.Enums.EventType;
 import jakarta.persistence.*;
 import lombok.Data;

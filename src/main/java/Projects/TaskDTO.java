@@ -1,4 +1,7 @@
+package Projects;
+
 import PackUsers.UserDTO;
+import enums.Enums;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -10,4 +13,8 @@ public class TaskDTO {
     private LocalDate dueDate;
     private String taskStatus;
     private UserDTO assignee;
+
+    public Enums.TaskImportance getImportance() {
+        return null;
+    }
 }

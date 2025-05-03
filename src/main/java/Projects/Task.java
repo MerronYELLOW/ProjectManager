@@ -1,3 +1,5 @@
+package Projects;
+
 import enums.Enums.TaskStatus;
 import enums.Enums.TaskImportance;
 import jakarta.persistence.*;

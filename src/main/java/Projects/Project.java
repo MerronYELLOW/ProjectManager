@@ -1,27 +1,32 @@
+package Projects;
+
 import jakarta.persistence.*;
 import lombok.Data;
 import enums.Enums;
-
+import PackUsers.User;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import enums.Enums.ProjectStatus;
+import lombok.Getter;
 
 @Data
 @Entity
 @Table(name = "projects")
 public class Project {
+    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long projectID;
 
     @Column(nullable = false)
-    private String name;
+    private String projectName;
 
     @Column(length = 1000)
-    private String description;
+    private String projectDescription;
 
     @Enumerated(EnumType.STRING)
-    private Enums.ProjectStatus status;
+    private Enums.ProjectStatus projectStatus;
 
     @Enumerated(EnumType.STRING)
     private Enums.ProjectImportance importance;
@@ -51,6 +56,29 @@ public class Project {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Document> documents;
 
+    public Project(Long projectID, String projectName, String projectDescription, Enums.ProjectStatus projectStatus, Enums.ProjectImportance importance, User projectLead, List<User> assignedUsers, LocalDate dueDate, List<Task> tasks, Schedule schedule, List<Document> documents)
+        {
+        this.projectID = projectID;
+        this.projectName = projectName;
+        this.projectDescription = projectDescription;
+        this.projectStatus = projectStatus;
+        this.importance = importance;
+        this.projectLead = projectLead;
+        this.assignedUsers = assignedUsers;
+        this.dueDate = dueDate;
+        this.tasks = tasks;
+        this.schedule = schedule;
+        this.documents = documents;
+    }
+
+    public Project(Long projectID){
+        this.projectID = projectID;
+    }
+
+    public Project() {
+
+    }
+
     public Task createTask(TaskDTO taskDetails) {
         Task task = new Task();
         task.setName(taskDetails.getName());
@@ -73,13 +101,13 @@ public class Project {
     }
 
     public void closeProject() {
-        this.status = ProjectStatus.COMPLETED;
+        this.projectStatus = ProjectStatus.COMPLETED;
         this.tasks.forEach(task -> task.setStatus(Enums.TaskStatus.COMPLETED));
     }
 
     public void updateProjectDetails(ProjectDTO projectDetails) {
-        this.name = projectDetails.getName();
-        this.description = projectDetails.getDescription();
+        this.projectName = projectDetails.getName();
+        this.projectDescription = projectDetails.getDescription();
         this.dueDate = projectDetails.getDueDate();
         this.importance = projectDetails.getImportance();
     }

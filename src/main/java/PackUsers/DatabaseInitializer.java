@@ -26,12 +26,12 @@ public class DatabaseInitializer implements CommandLineRunner {
             User admin = new User();
             admin.setEmail("admin@example.com");
             admin.setPassword(passwordEncoder.encode("admin123")); // Hashowanie hasła
-            admin.setName("Administrator Systemu");
+            admin.setName("Admin");
             admin.setRole(Role.ADMIN);
 
             userRepository.save(admin);
 
-            System.out.println("Utworzono konto admina");
+            System.out.println("Admin account was created");
         }
     }
 }
