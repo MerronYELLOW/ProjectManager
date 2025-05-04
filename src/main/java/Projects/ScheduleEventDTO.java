@@ -2,6 +2,8 @@ package Projects;
 
 import lombok.Data;
 
+import Enums.Enums.EventType;
+
 import java.time.LocalDateTime;
 
 @Data

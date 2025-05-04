@@ -28,10 +28,18 @@ public class DatabaseInitializer implements CommandLineRunner {
             admin.setPassword(passwordEncoder.encode("admin123")); // Hashowanie hasła
             admin.setName("Admin");
             admin.setRole(Role.ADMIN);
-
             userRepository.save(admin);
-
             System.out.println("Admin account was created");
+        }
+
+        if (userRepository.findByEmail("john.doe@example.com").isEmpty()) {
+            User john = new User();
+            john.setEmail("john.doe@example.com");
+            john.setPassword(passwordEncoder.encode("password123"));
+            john.setName("John Doe");
+            john.setRole(Role.EMPLOYEE);
+            userRepository.save(john);
+            System.out.println("User John Doe was created");
         }
     }
 }

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import PackUsers.User;
 import PackUsers.UserRepository;
+import Enums.Enums.ProjectStatus;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +26,7 @@ public class ProjectService {
 
         // Konwersja statusu ze Stringa (jeśli nie null)
         if (dto.getProjectStatus() != null) {
-            project.setProjectStatus(Enums.ProjectStatus.valueOf(dto.getProjectStatus()));
+            project.setProjectStatus(ProjectStatus.valueOf(dto.getProjectStatus()));
         }
 
         // Przypisanie użytkowników po ID (jeśli masz w DTO UserDTO z ID)

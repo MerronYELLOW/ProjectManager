@@ -1,5 +1,6 @@
 package Projects;
 
+import PackUsers.User;
 import jakarta.persistence.*;
 import lombok.Data;
 

@@ -1,14 +1,10 @@
-<<<<<<<< HEAD:src/main/resources/archetype-resources/src/main/java/Task.java
-========
 package Projects;
 
-import enums.Enums.TaskStatus;
-import enums.Enums.TaskImportance;
->>>>>>>> 5c84025 (Resolving problems with projects):src/main/java/Projects/Task.java
+import Enums.Enums.TaskStatus;
+import Enums.Enums.TaskImportance;
+import PackUsers.User;
 import jakarta.persistence.*;
 import lombok.Data;
-import src.main.java.enums.Enums.TaskImportance;
-import src.main.java.enums.Enums.TaskStatus;
 
 import java.time.LocalDate;
 import java.util.List;

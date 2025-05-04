@@ -1,9 +1,9 @@
 package Projects;
 
-import enums.Enums.EventType;
+import Enums.Enums.EventType;
+import PackUsers.User;
 import jakarta.persistence.*;
 import lombok.Data;
-import src.main.java.enums.Enums.EventType;
 
 import java.time.LocalDateTime;
 

@@ -2,13 +2,13 @@ package Projects;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
-import Enums.Enums;
+import Enums.Enums.TaskStatus;
+import Enums.Enums.ProjectStatus;
 import PackUsers.User;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import Enums.Enums.ProjectStatus;
+import Enums.Enums.ProjectImportance;
 import lombok.Getter;
 
 @Data
@@ -28,7 +28,7 @@ public class Project {
 
     @Enumerated(EnumType.STRING)
     private ProjectStatus status;
-    private Enums.ProjectStatus projectStatus;
+    private ProjectStatus projectStatus;
 
     @Enumerated(EnumType.STRING)
     private ProjectImportance importance;
@@ -58,7 +58,7 @@ public class Project {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Document> documents;
 
-    public Project(Long projectID, String projectName, String projectDescription, Enums.ProjectStatus projectStatus, Enums.ProjectImportance importance, User projectLead, List<User> assignedUsers, LocalDate dueDate, List<Task> tasks, Schedule schedule, List<Document> documents)
+    public Project(Long projectID, String projectName, String projectDescription, ProjectStatus projectStatus, ProjectImportance importance, User projectLead, List<User> assignedUsers, LocalDate dueDate, List<Task> tasks, Schedule schedule, List<Document> documents)
         {
         this.projectID = projectID;
         this.projectName = projectName;
@@ -88,7 +88,7 @@ public class Project {
         task.setDueDate(taskDetails.getDueDate());
         task.setImportance(taskDetails.getImportance());
         task.setProject(this);
-        task.setStatus(TaskStatus.TODO);
+        task.setStatus(Enums.Enums.TaskStatus.TODO);
         this.tasks.add(task);
         return task;
     }
@@ -104,14 +104,14 @@ public class Project {
 
     public void closeProject() {
         this.projectStatus = ProjectStatus.COMPLETED;
-        this.tasks.forEach(task -> task.setStatus(Enums.TaskStatus.COMPLETED));
+        this.tasks.forEach(task -> task.setStatus(TaskStatus.COMPLETED));
     }
 
-    public void updateProjectDetails(ProjectDTO projectDetails) {
+    public void updateProjectDetails(ProjectDTO projectDetails, Long projectID) {
         this.projectName = projectDetails.getName();
         this.projectDescription = projectDetails.getDescription();
         this.dueDate = projectDetails.getDueDate();
-        this.importance = projectDetails.getImportance();
+        this.importance = projectDetails.getImportance(projectID);
     }
 
     public void addProjectDocument(Document document) {

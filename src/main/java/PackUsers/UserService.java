@@ -1,13 +1,6 @@
 package PackUsers;
 
-import com.example.projectmanagement.dto.UserDTO;
-import com.example.projectmanagement.exception.ResourceNotFoundException;
-import com.example.projectmanagement.exception.UnauthorizedOperationException;
-import com.example.projectmanagement.exception.UserAlreadyExistsException;
-import com.example.projectmanagement.model.Role;
-import com.example.projectmanagement.model.Team;
-import com.example.projectmanagement.repository.TeamRepository;
-import com.example.projectmanagement.repository.UserRepository;
+import Enums.Enums.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

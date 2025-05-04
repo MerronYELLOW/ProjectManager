@@ -1,7 +1,7 @@
 package Projects;
 
 import PackUsers.UserDTO;
-import enums.Enums;
+import Enums.Enums;
 import lombok.Data;
 
 import java.time.LocalDate;
