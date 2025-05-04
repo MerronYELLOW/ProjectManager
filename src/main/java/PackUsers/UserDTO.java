@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import com.example.projectmanagement.model.Role;
+import Enums.Enums.Role;
 
 // User DTO
 @Data

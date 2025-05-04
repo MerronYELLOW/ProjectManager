@@ -1,6 +1,6 @@
 package PackUsers;
 
-import enums.Enums.Role;
+import Enums.Enums.Role;
 import lombok.Data;
 
 import javax.validation.constraints.Email;

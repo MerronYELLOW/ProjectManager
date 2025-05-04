@@ -1,19 +1,19 @@
 package PackUsers;
 
+import Enums.Enums;
 import jakarta.persistence.*;
 import lombok.Data;
-import src.main.java.enums.Enums.Role;
-
+import Enums.Enums.Role;
 import java.util.List;
-
-import enums.Enums;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
 import Projects.Project;
-import enums.Enums.Role;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,18 +44,11 @@ public class User {
     private Role role;
 
     @ManyToMany(mappedBy = "assignedUsers")
-<<<<<<<< HEAD:src/main/resources/archetype-resources/src/main/java/User.java
-    private List<Project> projects;
-
-    public void changePassword(String newPassword) {
-        // Password hashing logic
-        this.password = passwordEncoder.encode(newPassword);
-========
     private List<Project> projects = new ArrayList<>();
 
-    public void changePassword(String newPassword) {
-        this.password = newPassword;
->>>>>>>> 1b81f41 (User Creation):src/main/java/PackUsers/User.java
+    public void changePassword(String newPassword, PasswordEncoder passwordEncoder) {
+        // Password hashing logic
+        this.password = passwordEncoder.encode(newPassword);
     }
 
     public void updateProfile(UserDTO userDetails) {
@@ -77,7 +70,7 @@ public void removeFromProject(Long projectID) {
         return this.role == role;
     }
 
-    public void setRole(Enums.Role role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 }
