@@ -1,4 +1,4 @@
-package src.main.java.enums;
+package Enums;
 
 public class Enums {
 

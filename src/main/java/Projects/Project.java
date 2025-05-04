@@ -2,17 +2,13 @@ package Projects;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import src.main.java.enums.Enums;
-import src.main.java.enums.Enums.ProjectImportance;
-import src.main.java.enums.Enums.ProjectStatus;
-import src.main.java.enums.Enums.TaskStatus;
 
-import enums.Enums;
+import Enums.Enums;
 import PackUsers.User;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import enums.Enums.ProjectStatus;
+import Enums.Enums.ProjectStatus;
 import lombok.Getter;
 
 @Data
@@ -31,11 +27,8 @@ public class Project {
     private String projectDescription;
 
     @Enumerated(EnumType.STRING)
-<<<<<<<< HEAD:src/main/resources/archetype-resources/src/main/java/Project.java
     private ProjectStatus status;
-========
     private Enums.ProjectStatus projectStatus;
->>>>>>>> 5c84025 (Resolving problems with projects):src/main/java/Projects/Project.java
 
     @Enumerated(EnumType.STRING)
     private ProjectImportance importance;
