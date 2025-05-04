@@ -31,7 +31,7 @@ public class Project {
     private Enums.ProjectStatus projectStatus;
 
     @Enumerated(EnumType.STRING)
-    private ProjectImportance importancees;
+    private ProjectImportance importance;
 
     @ManyToOne
     @JoinColumn(name = "project_lead_id")
