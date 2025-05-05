@@ -4,17 +4,17 @@ classDiagram
         +String email
         +String password
         +String name
-        +PackUsers.Team team
+        +projectmanagement.PackUsers.Team team
         +Role role
-        +List~Projects~ projects
+        +List~projectmanagement.Enums.Enums.Projects~ projects
         +changePassword(String newPassword)
-        +updateProfile(PackUsers.UserDTO userDetails)
-        +assignToProject(Projects project)
-        +removeFromProject(Projects project)
+        +updateProfile(projectmanagement.PackUsers.UserDTO userDetails)
+        +assignToProject(projectmanagement.Enums.Enums.Projects project)
+        +removeFromProject(projectmanagement.Enums.Enums.Projects project)
         +hasRole(Role role)
     }
 
-    class PackUsers.Team {
+    class projectmanagement.PackUsers.Team {
         +Long id
         +String name
         +User supervisor
@@ -25,7 +25,7 @@ classDiagram
         +listMembers()
     }
 
-    class Projects {
+    class projectmanagement.Enums.Enums.Projects {
         +Long id
         +String name
         +String description
@@ -34,15 +34,15 @@ classDiagram
         +List~User~ assignedUsers
         +LocalDate dueDate
         +ProjectImportance importance
-        +List~Projects.Task~ tasks
-        +createTask(Projects.TaskDTO taskDetails)
+        +List~projectmanagement.Projects.Task~ tasks
+        +createTask(projectmanagement.Projects.TaskDTO taskDetails)
         +assignUsers(List~User~ users)
         +closeProject()
-        +updateProjectDetails(Projects.ProjectDTO projectDetails)
-        +addProjectDocument(Projects.Document document)
+        +updateProjectDetails(projectmanagement.Projects.ProjectDTO projectDetails)
+        +addProjectDocument(projectmanagement.Projects.Document document)
     }
 
-    class Projects.Task {
+    class projectmanagement.Projects.Task {
         +Long id
         +String name
         +String description
@@ -51,14 +51,14 @@ classDiagram
         +User supervisor
         +LocalDate dueDate
         +TaskImportance importance
-        +List~Projects.TaskStep~ steps
+        +List~projectmanagement.Projects.TaskStep~ steps
         +submitTask(String completionNote)
-        +addStep(Projects.TaskStep step)
+        +addStep(projectmanagement.Projects.TaskStep step)
         +approveTask(boolean isApproved, String feedback)
-        +updateTaskDetails(Projects.TaskDTO taskDetails)
+        +updateTaskDetails(projectmanagement.Projects.TaskDTO taskDetails)
     }
 
-    class Projects.TaskStep {
+    class projectmanagement.Projects.TaskStep {
         +Long id
         +String description
         +boolean completed
@@ -67,26 +67,26 @@ classDiagram
         +updateDescription(String newDescription)
     }
 
-    class Projects.Schedule {
+    class projectmanagement.Projects.Schedule {
         +Long id
-        +Projects project
-        +List~Projects.ScheduleEvent~ events
-        +addEvent(Projects.ScheduleEvent event)
-        +removeEvent(Projects.ScheduleEvent event)
+        +projectmanagement.Enums.Enums.Projects project
+        +List~projectmanagement.Projects.ScheduleEvent~ events
+        +addEvent(projectmanagement.Projects.ScheduleEvent event)
+        +removeEvent(projectmanagement.Projects.ScheduleEvent event)
         +getUpcomingEvents()
         +generateProjectTimeline()
     }
 
-    class Projects.ScheduleEvent {
+    class projectmanagement.Projects.ScheduleEvent {
         +Long id
         +String description
         +LocalDateTime dateTime
         +EventType type
         +User createdBy
-        +updateEventDetails(Projects.ScheduleEventDTO eventDetails)
+        +updateEventDetails(projectmanagement.Projects.ScheduleEventDTO eventDetails)
     }
 
-    class Projects.Document {
+    class projectmanagement.Projects.Document {
         +Long id
         +String name
         +String fileUrl
@@ -138,15 +138,15 @@ classDiagram
         STRATEGIC
     }
 
-    User "1" -- "1" PackUsers.Team : belongs to
-    User "1" -- "*" Projects : can create/participate
-    Projects "1" -- "*" Projects.Task : contains
-    Projects.Task "1" -- "*" Projects.TaskStep : divided into
-    Projects "1" -- "1" Projects.Schedule : has
-    Projects.Schedule "1" -- "*" Projects.ScheduleEvent : includes
-    Projects "1" -- "*" Projects.Document : has
+    User "1" -- "1" projectmanagement.PackUsers.Team : belongs to
+    User "1" -- "*" projectmanagement.Enums.Enums.Projects : can create/participate
+    projectmanagement.Enums.Enums.Projects "1" -- "*" projectmanagement.Projects.Task : contains
+    projectmanagement.Projects.Task "1" -- "*" projectmanagement.Projects.TaskStep : divided into
+    projectmanagement.Enums.Enums.Projects "1" -- "1" projectmanagement.Projects.Schedule : has
+    projectmanagement.Projects.Schedule "1" -- "*" projectmanagement.Projects.ScheduleEvent : includes
+    projectmanagement.Enums.Enums.Projects "1" -- "*" projectmanagement.Projects.Document : has
     User ..> Role : has
-    Projects ..> ProjectStatus : has
-    Projects.Task ..> TaskStatus : has
-    Projects.Task ..> TaskImportance : has
-    Projects ..> ProjectImportance : has
+    projectmanagement.Enums.Enums.Projects ..> ProjectStatus : has
+    projectmanagement.Projects.Task ..> TaskStatus : has
+    projectmanagement.Projects.Task ..> TaskImportance : has
+    projectmanagement.Enums.Enums.Projects ..> ProjectImportance : has

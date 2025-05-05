@@ -1,8 +1,8 @@
-Projects manager II, topic number 5.
+projectmanagement.Enums.Enums.Projects manager II, topic number 5.
 
-Projects authors
+projectmanagement.Enums.Enums.Projects authors
 Maksym Krzemiński and Błażej Majewski
-# Projects Management Platform
+# projectmanagement.Enums.Enums.Projects Management Platform
 
 ## Overview
 This is a comprehensive project management system designed to streamline team collaboration, task tracking, and project management within organizations.
@@ -14,7 +14,7 @@ This is a comprehensive project management system designed to streamline team co
 - **Authentication**: Spring Security
 - **API Documentation**: Swagger
 
-## Projects Structure
+## projectmanagement.Enums.Enums.Projects Structure
 ```
 project-management-platform/
 │
@@ -29,32 +29,32 @@ project-management-platform/
 │   │   │   ├── controller/
 │   │   │   │   ├── ProjectController.java
 │   │   │   │   ├── TaskController.java
-│   │   │   │   ├── PackUsers.UserController.java
+│   │   │   │   ├── projectmanagement.PackUsers.UserController.java
 │   │   │   │   └── ScheduleController.java
 │   │   │   │
 │   │   │   ├── service/
 │   │   │   │   ├── ProjectService.java
 │   │   │   │   ├── TaskService.java
-│   │   │   │   ├── PackUsers.UserService.java
+│   │   │   │   ├── projectmanagement.PackUsers.UserService.java
 │   │   │   │   └── ScheduleService.java
 │   │   │   │
 │   │   │   ├── repository/
 │   │   │   │   ├── ProjectRepository.java
 │   │   │   │   ├── TaskRepository.java
-│   │   │   │   ├── PackUsers.UserRepository.java
+│   │   │   │   ├── projectmanagement.PackUsers.UserRepository.java
 │   │   │   │   └── ScheduleRepository.java
 │   │   │   │
 │   │   │   ├── model/
-│   │   │   │   ├── Projects.java
-│   │   │   │   ├── Projects.Task.java
+│   │   │   │   ├── projectmanagement.Enums.Enums.Projects.java
+│   │   │   │   ├── projectmanagement.Projects.Task.java
 │   │   │   │   ├── User.java
-│   │   │   │   ├── PackUsers.Team.java
-│   │   │   │   └── Projects.Schedule.java
+│   │   │   │   ├── projectmanagement.PackUsers.Team.java
+│   │   │   │   └── projectmanagement.Projects.Schedule.java
 │   │   │   │
 │   │   │   └── dto/
-│   │   │       ├── Projects.ProjectDTO.java
-│   │   │       ├── Projects.TaskDTO.java
-│   │   │       └── PackUsers.UserDTO.java
+│   │   │       ├── projectmanagement.Projects.ProjectDTO.java
+│   │   │       ├── projectmanagement.Projects.TaskDTO.java
+│   │   │       └── projectmanagement.PackUsers.UserDTO.java
 │   │   │
 │   │   └── resources/
 │   │       ├── application.properties
@@ -71,9 +71,9 @@ project-management-platform/
 
 ## Key Features
 - Role-based Access Control
-- Projects and Projects.Task Management
-- PackUsers.Team Collaboration
-- Projects.Schedule and Calendar Management
+- projectmanagement.Enums.Enums.Projects and projectmanagement.Projects.Task Management
+- projectmanagement.PackUsers.Team Collaboration
+- projectmanagement.Projects.Schedule and Calendar Management
 - User Authentication and Authorization
 
 ## Setup and Installation
@@ -84,17 +84,17 @@ project-management-platform/
 
 ## User Roles
 - **Employee**: Basic project participation
-- **Projects Creator**: Initiates and manages projects
-- **Projects Lead**: Manages project lifecycle
+- **projectmanagement.Enums.Enums.Projects Creator**: Initiates and manages projects
+- **projectmanagement.Enums.Enums.Projects Lead**: Manages project lifecycle
 - **Direct Supervisor**: Oversees team projects
 - **Super-User**: Administrative rights
 - **Platform Administrator**: System management
 
 ## API Endpoints
-- `/api/projects`: Projects management
-- `/api/tasks`: Projects.Task management
+- `/api/projects`: projectmanagement.Enums.Enums.Projects management
+- `/api/tasks`: projectmanagement.Projects.Task management
 - `/api/users`: User management
-- `/api/schedule`: Projects scheduling
+- `/api/schedule`: projectmanagement.Enums.Enums.Projects scheduling
 
 ## Security
 - Role-based access control

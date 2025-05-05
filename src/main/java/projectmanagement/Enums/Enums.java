@@ -1,4 +1,4 @@
-package Enums;
+package projectmanagement.Enums;
 
 public class Enums {
 

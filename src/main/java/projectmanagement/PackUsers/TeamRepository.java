@@ -1,4 +1,4 @@
-package PackUsers;
+package projectmanagement.PackUsers;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

@@ -1,4 +1,4 @@
-package PackUsers;
+package projectmanagement.PackUsers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,31 +20,31 @@ public class UserController {
         this.userService = userService;
     }
 
-    /**
-     * Endpoint do tworzenia nowego użytkownika przez Super Usera
-     */
-    @PostMapping
-    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserCreationDTO userCreationDTO,
-                                              @AuthenticationPrincipal User currentUser) {
-        UserDTO createdUser = userService.createUser(userCreationDTO, currentUser);
-        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
-    }
+//    /**
+//     * Endpoint do tworzenia nowego użytkownika przez Super Usera
+//     */
+//    @PostMapping
+//    public ResponseEntity<User> createUser(@Valid @RequestBody UserCreation userCreation,
+//                                              @AuthenticationPrincipal User currentUser) {
+//        UserDTO createdUser = userService.createUser(userCreation, currentUser);
+//        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+//    }
 
     /**
      * Endpoint do pobierania użytkownika po ID
      */
     @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
-        UserDTO userDTO = userService.getUserById(id);
-        return ResponseEntity.ok(userDTO);
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        User user = userService.getUserById(id);
+        return ResponseEntity.ok(user);
     }
 
     /**
      * Endpoint do pobierania wszystkich użytkowników
      */
     @GetMapping
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
-        List<UserDTO> users = userService.getAllUsers();
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
 }

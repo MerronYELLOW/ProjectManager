@@ -1,6 +1,6 @@
-package Projects;
+package projectmanagement.Projects;
 
-import PackUsers.User;
+import projectmanagement.PackUsers.User;
 import jakarta.persistence.*;
 import lombok.Data;
 
