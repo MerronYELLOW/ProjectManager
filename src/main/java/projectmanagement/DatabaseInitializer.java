@@ -1,5 +1,6 @@
 package projectmanagement;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import projectmanagement.Enums.Enums;
 import projectmanagement.Enums.Enums.Role;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +18,15 @@ public class DatabaseInitializer implements CommandLineRunner {
 
     private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
-    // private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public DatabaseInitializer(UserRepository userRepository,
-                               ProjectRepository projectRepository) {
+                               ProjectRepository projectRepository,
+                               PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.projectRepository = projectRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -33,7 +36,8 @@ public class DatabaseInitializer implements CommandLineRunner {
             // Tworzenie użytkownika admin (tylko podczas pierwszego uruchomienia aplikacji)
             User admin = new User();
             admin.setEmail("admin@example.com");
-            admin.setPassword("admin123"); // Hashowanie hasła
+            admin.setPassword(passwordEncoder.encode("admin123"));
+//            admin.setPassword("admin123"); // Hashowanie hasła
             admin.setName("Admin");
             admin.setRole(Role.ADMIN);
             userRepository.save(admin);
@@ -43,7 +47,8 @@ public class DatabaseInitializer implements CommandLineRunner {
         if (userRepository.findByEmail("john.doe@example.com").isEmpty()) {
             User john = new User();
             john.setEmail("john.doe@example.com");
-            john.setPassword("password123");
+            john.setPassword(passwordEncoder.encode("password123"));
+            // john.setPassword("password123");
             john.setName("John Doe");
             john.setRole(Role.EMPLOYEE);
             userRepository.save(john);

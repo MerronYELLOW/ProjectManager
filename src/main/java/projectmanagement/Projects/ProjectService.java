@@ -18,6 +18,10 @@ public class ProjectService {
     @Autowired
     private UserRepository userRepository;
 
+    public List<Project> getAllProjects() {
+        return projectRepository.findAll();
+    }
+
     public Project createProject(Project p) {
         Project project = new Project();
         project.setName(p.getName());
