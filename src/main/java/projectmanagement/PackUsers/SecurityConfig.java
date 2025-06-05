@@ -1,3 +1,4 @@
+
 package projectmanagement.PackUsers;
 
 import org.springframework.context.annotation.Bean;
@@ -10,14 +11,14 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
-//    // to do usunięcia, bo tylko blokuje autentykacje do testowania żeby było szybciej
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http
-//                .csrf().disable()
-//                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
-//        return http.build();
-//    }
+    // to do usunięcia, bo tylko blokuje autentykacje do testowania żeby było szybciej
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+        http.csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
+        return http.build();
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
