@@ -8,6 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/projects")
+@CrossOrigin(origins = "*")
 public class ProjectController {
 
     @Autowired
@@ -23,5 +24,11 @@ public class ProjectController {
     public ResponseEntity<Project> createProject(@RequestBody Project p) {
         Project createdProject = projectService.createProject(p);
         return ResponseEntity.ok(createdProject);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Project> getProjectById(@PathVariable Long id) {
+        Project project = projectService.getProjectById(id);
+        return ResponseEntity.ok(project);
     }
 }

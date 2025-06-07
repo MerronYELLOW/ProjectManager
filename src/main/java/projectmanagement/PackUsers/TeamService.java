@@ -32,4 +32,25 @@ public class TeamService {
         return teamRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Team not found"));
     }
+
+    public Team updateTeam(Long id, Team teamDetails) {
+        Team team = teamRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Team not found"));
+
+        team.setName(teamDetails.getName());
+
+        // If supervisor ID is provided, set the supervisor
+        if (teamDetails.getSupervisor() != null && teamDetails.getSupervisor().getId() != null) {
+            team.setSupervisor(userRepository.findById(teamDetails.getSupervisor().getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Supervisor not found")));
+        }
+
+        return teamRepository.save(team);
+    }
+
+    public void deleteTeam(Long id) {
+        Team team = teamRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Team not found"));
+        teamRepository.delete(team);
+    }
 }

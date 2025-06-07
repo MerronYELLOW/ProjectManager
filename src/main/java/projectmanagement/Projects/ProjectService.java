@@ -2,6 +2,7 @@ package projectmanagement.Projects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import projectmanagement.PackUsers.ResourceNotFoundException;
 import projectmanagement.PackUsers.User;
 import projectmanagement.PackUsers.UserRepository;
 import projectmanagement.Enums.Enums.ProjectStatus;
@@ -33,15 +34,15 @@ public class ProjectService {
             project.setStatus(p.getStatus());
         }
 
-//        // Przypisanie użytkowników po ID - to można jakoś edytować
-//        po ustaleniu jak połączeni są userzy z projektem
-//        if (project.getAssignedUsers() != null) {
-//            List<User> users = project.getAssignedUsers().stream()
-//                    .map(userDTO -> userRepository.findById(userDTO.getId()).orElseThrow())
-//                    .collect(Collectors.toList());
-//            project.setAssignedUsers(users);
-//        }
+        if (p.getImportance() != null) {
+            project.setImportance(p.getImportance());
+        }
 
         return projectRepository.save(project);
+    }
+
+    public Project getProjectById(Long id) {
+        return projectRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Project not found"));
     }
 }

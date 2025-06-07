@@ -8,6 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/teams")
+@CrossOrigin(origins = "*")
 public class TeamController {
 
     @Autowired
@@ -29,5 +30,17 @@ public class TeamController {
     public ResponseEntity<Team> getTeamById(@PathVariable Long id) {
         Team team = teamService.getTeamById(id);
         return ResponseEntity.ok(team);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Team> updateTeam(@PathVariable Long id, @RequestBody Team team) {
+        Team updatedTeam = teamService.updateTeam(id, team);
+        return ResponseEntity.ok(updatedTeam);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTeam(@PathVariable Long id) {
+        teamService.deleteTeam(id);
+        return ResponseEntity.noContent().build();
     }
 }
