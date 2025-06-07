@@ -764,19 +764,25 @@
         // API functions - Updated to handle backend properly
         async function loadProjects() {
             try {
-                const response = await fetch('/api/projects');
+                const response = await fetch('/api/projects', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+
                 if (response.ok) {
                     projects = await response.json();
+                    console.log('Projects loaded:', projects);
                     renderProjects();
                 } else {
-                    console.error('Failed to load projects:', response.statusText);
-                    // Show empty state
+                    console.error('Failed to load projects:', response.status, response.statusText);
                     projects = [];
                     renderProjects();
                 }
             } catch (error) {
                 console.error('Error loading projects:', error);
-                // Show empty state
                 projects = [];
                 renderProjects();
             }
@@ -784,19 +790,25 @@
 
         async function loadUsers() {
             try {
-                const response = await fetch('/api/users');
+                const response = await fetch('/api/users', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+
                 if (response.ok) {
                     users = await response.json();
+                    console.log('Users loaded:', users);
                     renderUsers();
                 } else {
-                    console.error('Failed to load users:', response.statusText);
-                    // Show empty state
+                    console.error('Failed to load users:', response.status, response.statusText);
                     users = [];
                     renderUsers();
                 }
             } catch (error) {
                 console.error('Error loading users:', error);
-                // Show empty state
                 users = [];
                 renderUsers();
             }
@@ -804,19 +816,25 @@
 
         async function loadTasks() {
             try {
-                const response = await fetch('/api/tasks');
+                const response = await fetch('/api/tasks', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+
                 if (response.ok) {
                     tasks = await response.json();
+                    console.log('Tasks loaded:', tasks);
                     renderTasks();
                 } else {
-                    console.error('Failed to load tasks:', response.statusText);
-                    // Show empty state
+                    console.error('Failed to load tasks:', response.status, response.statusText);
                     tasks = [];
                     renderTasks();
                 }
             } catch (error) {
                 console.error('Error loading tasks:', error);
-                // Show empty state
                 tasks = [];
                 renderTasks();
             }
@@ -824,17 +842,27 @@
 
         async function loadTeams() {
             try {
-                const response = await fetch('/api/teams');
+                const response = await fetch('/api/teams', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+
                 if (response.ok) {
                     teams = await response.json();
+                    console.log('Teams loaded:', teams);
                     renderTeams();
                 } else {
-                    console.error('Failed to load teams:', response.statusText);
+                    console.error('Failed to load teams:', response.status, response.statusText);
                     teams = [];
+                    renderTeams();
                 }
             } catch (error) {
                 console.error('Error loading teams:', error);
                 teams = [];
+                renderTeams();
             }
         }
 
@@ -844,22 +872,32 @@
             tbody.innerHTML = '';
 
             if (projects.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #6b7280;">No projects found</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #6b7280; padding: 2rem;">No projects found. Create your first project!</td></tr>';
             } else {
                 projects.forEach(project => {
                     const row = document.createElement('tr');
                     const statusClass = project.status ? project.status.toLowerCase().replace('_', '-') : 'pending';
                     const importanceClass = project.importance ? project.importance.toLowerCase() : 'low';
 
+                    // Format date properly
+                    let formattedDate = 'No deadline';
+                    if (project.dueDate) {
+                        try {
+                            const date = new Date(project.dueDate);
+                            formattedDate = date.toLocaleDateString();
+                        } catch (e) {
+                            formattedDate = project.dueDate;
+                        }
+                    }
+
                     row.innerHTML = `
-                        <td>${project.name || 'Unnamed Project'}</td>
+                        <td><strong>${project.name || 'Unnamed Project'}</strong></td>
                         <td><span class="status-badge status-${statusClass}">${project.status || 'PENDING'}</span></td>
                         <td><span class="status-badge importance-${importanceClass}">${project.importance || 'LOW'}</span></td>
-                        <td>${project.dueDate || 'No deadline'}</td>
+                        <td>${formattedDate}</td>
                         <td>${project.projectLead ? project.projectLead.name : 'Unassigned'}</td>
                         <td>
-                            <button class="btn btn-outline" onclick="editProject(${project.id})">Edit</button>
-                            <button class="btn btn-outline" onclick="deleteProject(${project.id})">Delete</button>
+                            <button class="btn btn-outline" onclick="viewProject(${project.id})" style="margin-right: 0.5rem;">View</button>
                         </td>
                     `;
                     tbody.appendChild(row);
@@ -875,18 +913,17 @@
             tbody.innerHTML = '';
 
             if (users.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #6b7280;">No users found</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #6b7280; padding: 2rem;">No users found.</td></tr>';
             } else {
                 users.forEach(user => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td>${user.name || 'Unnamed User'}</td>
+                        <td><strong>${user.name || 'Unnamed User'}</strong></td>
                         <td>${user.email || 'No email'}</td>
                         <td><span class="status-badge importance-medium">${user.role || 'EMPLOYEE'}</span></td>
-                        <td>${user.team ? user.team.name : 'No team'}</td>
+                        <td>${user.team ? user.team.name : 'No team assigned'}</td>
                         <td>
-                            <button class="btn btn-outline" onclick="editUser(${user.id})">Edit</button>
-                            <button class="btn btn-outline" onclick="deleteUser(${user.id})">Delete</button>
+                            <button class="btn btn-outline" onclick="viewUser(${user.id})">View</button>
                         </td>
                     `;
                     tbody.appendChild(row);
@@ -902,23 +939,33 @@
             tbody.innerHTML = '';
 
             if (tasks.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #6b7280;">No tasks found</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #6b7280; padding: 2rem;">No tasks found. Create your first task!</td></tr>';
             } else {
                 tasks.forEach(task => {
                     const row = document.createElement('tr');
-                    const statusClass = task.status ? task.status.toLowerCase().replace('_', '-') : 'todo';
+                    const statusClass = getStatusClass(task.status);
                     const importanceClass = task.importance ? task.importance.toLowerCase() : 'low';
 
+                    // Format date properly
+                    let formattedDate = 'No deadline';
+                    if (task.dueDate) {
+                        try {
+                            const date = new Date(task.dueDate);
+                            formattedDate = date.toLocaleDateString();
+                        } catch (e) {
+                            formattedDate = task.dueDate;
+                        }
+                    }
+
                     row.innerHTML = `
-                        <td>${task.name || 'Unnamed Task'}</td>
+                        <td><strong>${task.name || 'Unnamed Task'}</strong></td>
                         <td>${task.project ? task.project.name : 'No project'}</td>
-                        <td><span class="status-badge status-${statusClass}">${task.status || 'TODO'}</span></td>
+                        <td><span class="status-badge status-${statusClass}">${formatStatus(task.status)}</span></td>
                         <td><span class="status-badge importance-${importanceClass}">${task.importance || 'LOW'}</span></td>
                         <td>${task.assignee ? task.assignee.name : 'Unassigned'}</td>
-                        <td>${task.dueDate || 'No deadline'}</td>
+                        <td>${formattedDate}</td>
                         <td>
-                            <button class="btn btn-outline" onclick="editTask(${task.id})">Edit</button>
-                            <button class="btn btn-outline" onclick="deleteTask(${task.id})">Delete</button>
+                            <button class="btn btn-outline" onclick="viewTask(${task.id})">View</button>
                         </td>
                     `;
                     tbody.appendChild(row);
@@ -926,32 +973,70 @@
             }
 
             // Update dashboard stats
-            const activeTasks = tasks.filter(task => task.status !== 'COMPLETED').length;
+            const activeTasks = tasks.filter(task =>
+                task.status !== 'COMPLETED' && task.status !== 'REJECTED'
+            ).length;
             document.getElementById('active-tasks').textContent = activeTasks;
+
+            // Calculate completion rate
+            const completedTasks = tasks.filter(task => task.status === 'COMPLETED').length;
+            const completionRate = tasks.length > 0 ? Math.round((completedTasks / tasks.length) * 100) : 0;
+            document.getElementById('completion-rate').textContent = completionRate + '%';
         }
 
         function renderTeams() {
-            // Update teams section if needed
             console.log('Teams loaded:', teams.length);
+            // Teams section could be enhanced here if needed
+        }
+
+        // Helper functions
+        function getStatusClass(status) {
+            if (!status) return 'pending';
+
+            const statusMap = {
+                'TODO': 'pending',
+                'IN_PROGRESS': 'in-progress',
+                'UNDER_REVIEW': 'pending',
+                'COMPLETED': 'completed',
+                'REJECTED': 'cancelled',
+                'PENDING': 'pending',
+                'CANCELLED': 'cancelled'
+            };
+
+            return statusMap[status] || 'pending';
+        }
+
+        function formatStatus(status) {
+            if (!status) return 'TODO';
+            return status.replace('_', ' ');
         }
 
         // Form submission handlers - Updated with better error handling
         document.getElementById('project-form').addEventListener('submit', async function(e) {
             e.preventDefault();
 
+            const dueDateValue = document.getElementById('project-due-date').value;
+
             const projectData = {
-                name: document.getElementById('project-name').value,
-                description: document.getElementById('project-description').value,
+                name: document.getElementById('project-name').value.trim(),
+                description: document.getElementById('project-description').value.trim(),
                 status: document.getElementById('project-status').value,
                 importance: document.getElementById('project-importance').value,
-                dueDate: document.getElementById('project-due-date').value || null
+                dueDate: dueDateValue || null
             };
+
+            // Basic validation
+            if (!projectData.name) {
+                showNotification('Project name is required!', 'error');
+                return;
+            }
 
             try {
                 const response = await fetch('/api/projects', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
                     },
                     body: JSON.stringify(projectData)
                 });
@@ -965,31 +1050,40 @@
                     showNotification('Project created successfully!', 'success');
                 } else {
                     const errorText = await response.text();
-                    console.error('Server error:', errorText);
-                    showNotification('Error creating project: ' + errorText, 'error');
+                    console.error('Server error:', response.status, errorText);
+                    showNotification('Error creating project. Please try again.', 'error');
                 }
             } catch (error) {
                 console.error('Error creating project:', error);
-                showNotification('Network error creating project', 'error');
+                showNotification('Network error. Please check your connection.', 'error');
             }
         });
 
         document.getElementById('task-form').addEventListener('submit', async function(e) {
             e.preventDefault();
 
+            const dueDateValue = document.getElementById('task-due-date').value;
+
             const taskData = {
-                name: document.getElementById('task-name').value,
-                description: document.getElementById('task-description').value,
+                name: document.getElementById('task-name').value.trim(),
+                description: document.getElementById('task-description').value.trim(),
                 status: document.getElementById('task-status').value,
                 importance: document.getElementById('task-importance').value,
-                dueDate: document.getElementById('task-due-date').value || null
+                dueDate: dueDateValue || null
             };
+
+            // Basic validation
+            if (!taskData.name) {
+                showNotification('Task name is required!', 'error');
+                return;
+            }
 
             try {
                 const response = await fetch('/api/tasks', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
                     },
                     body: JSON.stringify(taskData)
                 });
@@ -1003,12 +1097,12 @@
                     showNotification('Task created successfully!', 'success');
                 } else {
                     const errorText = await response.text();
-                    console.error('Server error:', errorText);
-                    showNotification('Error creating task: ' + errorText, 'error');
+                    console.error('Server error:', response.status, errorText);
+                    showNotification('Error creating task. Please try again.', 'error');
                 }
             } catch (error) {
                 console.error('Error creating task:', error);
-                showNotification('Network error creating task', 'error');
+                showNotification('Network error. Please check your connection.', 'error');
             }
         });
 
@@ -1016,14 +1110,21 @@
             e.preventDefault();
 
             const teamData = {
-                name: document.getElementById('team-name').value
+                name: document.getElementById('team-name').value.trim()
             };
+
+            // Basic validation
+            if (!teamData.name) {
+                showNotification('Team name is required!', 'error');
+                return;
+            }
 
             try {
                 const response = await fetch('/api/teams', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
                     },
                     body: JSON.stringify(teamData)
                 });
@@ -1031,72 +1132,95 @@
                 if (response.ok) {
                     const newTeam = await response.json();
                     teams.push(newTeam);
-                    renderTeams();
+                    await loadTeams(); // Reload teams to update the display
                     hideModal('team-modal');
                     document.getElementById('team-form').reset();
                     showNotification('Team created successfully!', 'success');
                 } else {
                     const errorText = await response.text();
-                    console.error('Server error:', errorText);
-                    showNotification('Error creating team: ' + errorText, 'error');
+                    console.error('Server error:', response.status, errorText);
+                    showNotification('Error creating team. Please try again.', 'error');
                 }
             } catch (error) {
                 console.error('Error creating team:', error);
-                showNotification('Network error creating team', 'error');
+                showNotification('Network error. Please check your connection.', 'error');
             }
         });
 
-        // Notification function
+        // Enhanced notification function
         function showNotification(message, type) {
-            // Simple alert for now - could be enhanced with toast notifications
+            // Create a simple toast notification
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                border-radius: 10px;
+                color: white;
+                font-weight: 500;
+                z-index: 10000;
+                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+                transform: translateX(400px);
+                transition: transform 0.3s ease;
+            `;
+
             if (type === 'error') {
-                alert('Error: ' + message);
+                notification.style.background = 'linear-gradient(135deg, #dc2626, #b91c1c)';
             } else {
-                alert(message);
+                notification.style.background = 'linear-gradient(135deg, #059669, #047857)';
+            }
+
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            // Animate in
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.transform = 'translateX(400px)';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // View functions (placeholder implementations)
+        function viewProject(id) {
+            const project = projects.find(p => p.id === id);
+            if (project) {
+                alert(`Project: ${project.name}\nDescription: ${project.description || 'No description'}\nStatus: ${project.status}\nImportance: ${project.importance}`);
             }
         }
 
-        // Edit and delete functions (placeholder implementations)
-        function editProject(id) {
-            alert('Edit project functionality would be implemented here');
-        }
-
-        function deleteProject(id) {
-            if (confirm('Are you sure you want to delete this project?')) {
-                // Implement delete functionality
-                alert('Delete project functionality would be implemented here');
+        function viewUser(id) {
+            const user = users.find(u => u.id === id);
+            if (user) {
+                alert(`User: ${user.name}\nEmail: ${user.email}\nRole: ${user.role}`);
             }
         }
 
-        function editUser(id) {
-            alert('Edit user functionality would be implemented here');
-        }
-
-        function deleteUser(id) {
-            if (confirm('Are you sure you want to delete this user?')) {
-                // Implement delete functionality
-                alert('Delete user functionality would be implemented here');
-            }
-        }
-
-        function editTask(id) {
-            alert('Edit task functionality would be implemented here');
-        }
-
-        function deleteTask(id) {
-            if (confirm('Are you sure you want to delete this task?')) {
-                // Implement delete functionality
-                alert('Delete task functionality would be implemented here');
+        function viewTask(id) {
+            const task = tasks.find(t => t.id === id);
+            if (task) {
+                alert(`Task: ${task.name}\nDescription: ${task.description || 'No description'}\nStatus: ${task.status}\nImportance: ${task.importance}`);
             }
         }
 
         // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
-            // Load initial data
-            loadProjects();
-            loadUsers();
-            loadTasks();
-            loadTeams();
+            console.log('Application starting...');
+
+            // Load initial data with a small delay to ensure backend is ready
+            setTimeout(() => {
+                loadProjects();
+                loadUsers();
+                loadTasks();
+                loadTeams();
+            }, 500);
 
             // Close modals when clicking outside
             window.addEventListener('click', function(event) {
@@ -1104,6 +1228,8 @@
                     event.target.style.display = 'none';
                 }
             });
+
+            console.log('Application initialized');
         });
     </script>
 </body>
