@@ -761,7 +761,7 @@
             document.getElementById(modalId).style.display = 'none';
         }
 
-        // API functions
+        // API functions - Updated to handle backend properly
         async function loadProjects() {
             try {
                 const response = await fetch('/api/projects');
@@ -769,34 +769,15 @@
                     projects = await response.json();
                     renderProjects();
                 } else {
-                    // Fallback with sample data
-                    projects = [
-                        {
-                            id: 1,
-                            name: 'Project Runway',
-                            description: 'Very important project tralalo',
-                            status: 'PENDING',
-                            importance: 'HIGH',
-                            dueDate: '2025-06-21',
-                            projectLead: { name: 'Admin User' }
-                        }
-                    ];
+                    console.error('Failed to load projects:', response.statusText);
+                    // Show empty state
+                    projects = [];
                     renderProjects();
                 }
             } catch (error) {
                 console.error('Error loading projects:', error);
-                // Fallback with sample data
-                projects = [
-                    {
-                        id: 1,
-                        name: 'Project Runway',
-                        description: 'Very important project tralalo',
-                        status: 'PENDING',
-                        importance: 'HIGH',
-                        dueDate: '2025-06-21',
-                        projectLead: { name: 'Admin User' }
-                    }
-                ];
+                // Show empty state
+                projects = [];
                 renderProjects();
             }
         }
@@ -808,44 +789,15 @@
                     users = await response.json();
                     renderUsers();
                 } else {
-                    // Fallback with sample data
-                    users = [
-                        {
-                            id: 1,
-                            name: 'Admin User',
-                            email: 'admin@example.com',
-                            role: 'ADMIN',
-                            team: null
-                        },
-                        {
-                            id: 2,
-                            name: 'John Doe',
-                            email: 'john.doe@example.com',
-                            role: 'EMPLOYEE',
-                            team: null
-                        }
-                    ];
+                    console.error('Failed to load users:', response.statusText);
+                    // Show empty state
+                    users = [];
                     renderUsers();
                 }
             } catch (error) {
                 console.error('Error loading users:', error);
-                // Fallback with sample data
-                users = [
-                    {
-                        id: 1,
-                        name: 'Admin User',
-                        email: 'admin@example.com',
-                        role: 'ADMIN',
-                        team: null
-                    },
-                    {
-                        id: 2,
-                        name: 'John Doe',
-                        email: 'john.doe@example.com',
-                        role: 'EMPLOYEE',
-                        team: null
-                    }
-                ];
+                // Show empty state
+                users = [];
                 renderUsers();
             }
         }
@@ -857,43 +809,15 @@
                     tasks = await response.json();
                     renderTasks();
                 } else {
-                    // Fallback with sample data
-                    tasks = [
-                        {
-                            id: 1,
-                            name: 'Setup Development Environment',
-                            project: { name: 'Project Runway' },
-                            status: 'TODO',
-                            importance: 'HIGH',
-                            assignee: { name: 'John Doe' },
-                            dueDate: '2025-06-15'
-                        },
-                        {
-                            id: 2,
-                            name: 'Create Database Schema',
-                            project: { name: 'Project Runway' },
-                            status: 'IN_PROGRESS',
-                            importance: 'MEDIUM',
-                            assignee: { name: 'Jane Smith' },
-                            dueDate: '2025-06-20'
-                        }
-                    ];
+                    console.error('Failed to load tasks:', response.statusText);
+                    // Show empty state
+                    tasks = [];
                     renderTasks();
                 }
             } catch (error) {
                 console.error('Error loading tasks:', error);
-                // Fallback with sample data
-                tasks = [
-                    {
-                        id: 1,
-                        name: 'Setup Development Environment',
-                        project: { name: 'Project Runway' },
-                        status: 'TODO',
-                        importance: 'HIGH',
-                        assignee: { name: 'John Doe' },
-                        dueDate: '2025-06-15'
-                    }
-                ];
+                // Show empty state
+                tasks = [];
                 renderTasks();
             }
         }
@@ -904,32 +828,43 @@
                 if (response.ok) {
                     teams = await response.json();
                     renderTeams();
+                } else {
+                    console.error('Failed to load teams:', response.statusText);
+                    teams = [];
                 }
             } catch (error) {
                 console.error('Error loading teams:', error);
+                teams = [];
             }
         }
 
-        // Render functions
+        // Render functions - Updated to handle empty states
         function renderProjects() {
             const tbody = document.getElementById('projects-tbody');
             tbody.innerHTML = '';
 
-            projects.forEach(project => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${project.name}</td>
-                    <td><span class="status-badge status-${project.status.toLowerCase().replace('_', '-')}">${project.status}</span></td>
-                    <td><span class="status-badge importance-${project.importance.toLowerCase()}">${project.importance}</span></td>
-                    <td>${project.dueDate || 'No deadline'}</td>
-                    <td>${project.projectLead ? project.projectLead.name : 'Unassigned'}</td>
-                    <td>
-                        <button class="btn btn-outline" onclick="editProject(${project.id})">Edit</button>
-                        <button class="btn btn-outline" onclick="deleteProject(${project.id})">Delete</button>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
+            if (projects.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #6b7280;">No projects found</td></tr>';
+            } else {
+                projects.forEach(project => {
+                    const row = document.createElement('tr');
+                    const statusClass = project.status ? project.status.toLowerCase().replace('_', '-') : 'pending';
+                    const importanceClass = project.importance ? project.importance.toLowerCase() : 'low';
+
+                    row.innerHTML = `
+                        <td>${project.name || 'Unnamed Project'}</td>
+                        <td><span class="status-badge status-${statusClass}">${project.status || 'PENDING'}</span></td>
+                        <td><span class="status-badge importance-${importanceClass}">${project.importance || 'LOW'}</span></td>
+                        <td>${project.dueDate || 'No deadline'}</td>
+                        <td>${project.projectLead ? project.projectLead.name : 'Unassigned'}</td>
+                        <td>
+                            <button class="btn btn-outline" onclick="editProject(${project.id})">Edit</button>
+                            <button class="btn btn-outline" onclick="deleteProject(${project.id})">Delete</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
 
             // Update dashboard stats
             document.getElementById('total-projects').textContent = projects.length;
@@ -939,20 +874,24 @@
             const tbody = document.getElementById('users-tbody');
             tbody.innerHTML = '';
 
-            users.forEach(user => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${user.name}</td>
-                    <td>${user.email}</td>
-                    <td><span class="status-badge importance-medium">${user.role}</span></td>
-                    <td>${user.team ? user.team.name : 'No team'}</td>
-                    <td>
-                        <button class="btn btn-outline" onclick="editUser(${user.id})">Edit</button>
-                        <button class="btn btn-outline" onclick="deleteUser(${user.id})">Delete</button>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
+            if (users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #6b7280;">No users found</td></tr>';
+            } else {
+                users.forEach(user => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${user.name || 'Unnamed User'}</td>
+                        <td>${user.email || 'No email'}</td>
+                        <td><span class="status-badge importance-medium">${user.role || 'EMPLOYEE'}</span></td>
+                        <td>${user.team ? user.team.name : 'No team'}</td>
+                        <td>
+                            <button class="btn btn-outline" onclick="editUser(${user.id})">Edit</button>
+                            <button class="btn btn-outline" onclick="deleteUser(${user.id})">Delete</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
 
             // Update dashboard stats
             document.getElementById('team-members').textContent = users.length;
@@ -962,22 +901,29 @@
             const tbody = document.getElementById('tasks-tbody');
             tbody.innerHTML = '';
 
-            tasks.forEach(task => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${task.name}</td>
-                    <td>${task.project ? task.project.name : 'No project'}</td>
-                    <td><span class="status-badge status-${task.status.toLowerCase().replace('_', '-')}">${task.status}</span></td>
-                    <td><span class="status-badge importance-${task.importance.toLowerCase()}">${task.importance}</span></td>
-                    <td>${task.assignee ? task.assignee.name : 'Unassigned'}</td>
-                    <td>${task.dueDate || 'No deadline'}</td>
-                    <td>
-                        <button class="btn btn-outline" onclick="editTask(${task.id})">Edit</button>
-                        <button class="btn btn-outline" onclick="deleteTask(${task.id})">Delete</button>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
+            if (tasks.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #6b7280;">No tasks found</td></tr>';
+            } else {
+                tasks.forEach(task => {
+                    const row = document.createElement('tr');
+                    const statusClass = task.status ? task.status.toLowerCase().replace('_', '-') : 'todo';
+                    const importanceClass = task.importance ? task.importance.toLowerCase() : 'low';
+
+                    row.innerHTML = `
+                        <td>${task.name || 'Unnamed Task'}</td>
+                        <td>${task.project ? task.project.name : 'No project'}</td>
+                        <td><span class="status-badge status-${statusClass}">${task.status || 'TODO'}</span></td>
+                        <td><span class="status-badge importance-${importanceClass}">${task.importance || 'LOW'}</span></td>
+                        <td>${task.assignee ? task.assignee.name : 'Unassigned'}</td>
+                        <td>${task.dueDate || 'No deadline'}</td>
+                        <td>
+                            <button class="btn btn-outline" onclick="editTask(${task.id})">Edit</button>
+                            <button class="btn btn-outline" onclick="deleteTask(${task.id})">Delete</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
 
             // Update dashboard stats
             const activeTasks = tasks.filter(task => task.status !== 'COMPLETED').length;
@@ -985,11 +931,11 @@
         }
 
         function renderTeams() {
-            // Teams are rendered differently, update the cards section if needed
-            console.log('Teams loaded:', teams);
+            // Update teams section if needed
+            console.log('Teams loaded:', teams.length);
         }
 
-        // Form submission handlers
+        // Form submission handlers - Updated with better error handling
         document.getElementById('project-form').addEventListener('submit', async function(e) {
             e.preventDefault();
 
@@ -1016,13 +962,15 @@
                     renderProjects();
                     hideModal('project-modal');
                     document.getElementById('project-form').reset();
-                    alert('Project created successfully!');
+                    showNotification('Project created successfully!', 'success');
                 } else {
-                    alert('Error creating project');
+                    const errorText = await response.text();
+                    console.error('Server error:', errorText);
+                    showNotification('Error creating project: ' + errorText, 'error');
                 }
             } catch (error) {
                 console.error('Error creating project:', error);
-                alert('Error creating project');
+                showNotification('Network error creating project', 'error');
             }
         });
 
@@ -1052,13 +1000,15 @@
                     renderTasks();
                     hideModal('task-modal');
                     document.getElementById('task-form').reset();
-                    alert('Task created successfully!');
+                    showNotification('Task created successfully!', 'success');
                 } else {
-                    alert('Error creating task');
+                    const errorText = await response.text();
+                    console.error('Server error:', errorText);
+                    showNotification('Error creating task: ' + errorText, 'error');
                 }
             } catch (error) {
                 console.error('Error creating task:', error);
-                alert('Error creating task');
+                showNotification('Network error creating task', 'error');
             }
         });
 
@@ -1084,15 +1034,27 @@
                     renderTeams();
                     hideModal('team-modal');
                     document.getElementById('team-form').reset();
-                    alert('Team created successfully!');
+                    showNotification('Team created successfully!', 'success');
                 } else {
-                    alert('Error creating team');
+                    const errorText = await response.text();
+                    console.error('Server error:', errorText);
+                    showNotification('Error creating team: ' + errorText, 'error');
                 }
             } catch (error) {
                 console.error('Error creating team:', error);
-                alert('Error creating team');
+                showNotification('Network error creating team', 'error');
             }
         });
+
+        // Notification function
+        function showNotification(message, type) {
+            // Simple alert for now - could be enhanced with toast notifications
+            if (type === 'error') {
+                alert('Error: ' + message);
+            } else {
+                alert(message);
+            }
+        }
 
         // Edit and delete functions (placeholder implementations)
         function editProject(id) {
