@@ -1027,6 +1027,71 @@
             // Teams section could be enhanced here if needed
         }
 
+        function logApiError(operation, response, error) {
+            console.group(`API Error - ${operation}`);
+            if (response) {
+                console.log('Status:', response.status);
+                console.log('Status Text:', response.statusText);
+                console.log('URL:', response.url);
+            }
+            if (error) {
+                console.log('Error:', error);
+            }
+            console.groupEnd();
+        }
+
+        // Notification function
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Initial data load
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('Loading initial data...');
+            loadProjects();
+            loadUsers();
+            loadTasks();
+            loadTeams();
+        });
+
+        // Refresh all data handler
+        window.refreshAllData = async function() {
+            console.log('Refreshing all data...');
+            await Promise.all([loadProjects(), loadUsers(), loadTasks(), loadTeams()]);
+            showNotification('All data refreshed successfully!', 'success');
+        };
+
+        // Section navigation handler
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function(event) {
+                const sectionName = event.currentTarget.textContent.trim().toLowerCase();
+                showSection(sectionName);
+            });
+        });
+
+        // View functions
+        function viewProject(projectId) {
+            console.log('Viewing project:', projectId);
+            // Implement project viewing logic here
+        }
+
+        function viewUser(userId) {
+            console.log('Viewing user:', userId);
+            // Implement user viewing logic here
+        }
+
+        function viewTask(taskId) {
+            console.log('Viewing task:', taskId);
+            // Implement task viewing logic here
+        }
+
         // Helper functions
         function getStatusClass(status) {
             if (!status) return 'pending';
@@ -1049,18 +1114,31 @@
             return status.replace('_', ' ');
         }
 
-        // Form submission handlers - Updated with better error handling
+        //PROJECT FORM HANDLER
+
         document.getElementById('project-form').addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const dueDateValue = document.getElementById('project-due-date').value;
+
+            // Format date to ISO string if provided
+            let formattedDueDate = null;
+            if (dueDateValue) {
+                try {
+                    formattedDueDate = new Date(dueDateValue).toISOString();
+                } catch (error) {
+                    console.error('Invalid date format:', error);
+                    showNotification('Invalid date format. Please select a valid date.', 'error');
+                    return;
+                }
+            }
 
             const projectData = {
                 name: document.getElementById('project-name').value.trim(),
                 description: document.getElementById('project-description').value.trim(),
                 status: document.getElementById('project-status').value,
                 importance: document.getElementById('project-importance').value,
-                dueDate: dueDateValue || null
+                dueDate: formattedDueDate
             };
 
             // Basic validation
@@ -1068,6 +1146,8 @@
                 showNotification('Project name is required!', 'error');
                 return;
             }
+
+            console.log('Sending project data:', projectData);
 
             try {
                 const response = await fetch('/api/projects', {
@@ -1079,35 +1159,78 @@
                     body: JSON.stringify(projectData)
                 });
 
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+
                 if (response.ok) {
                     const newProject = await response.json();
+                    console.log('Project created successfully:', newProject);
                     projects.push(newProject);
                     renderProjects();
                     hideModal('project-modal');
                     document.getElementById('project-form').reset();
                     showNotification('Project created successfully!', 'success');
                 } else {
-                    const errorText = await response.text();
-                    console.error('Server error:', response.status, errorText);
-                    showNotification('Error creating project. Please try again.', 'error');
+                    let errorMessage = 'Error creating project. Please try again.';
+                    try {
+                        const errorData = await response.json();
+                        if (errorData.message) {
+                            errorMessage = errorData.message;
+                        } else if (errorData.error) {
+                            errorMessage = errorData.error;
+                        }
+                    } catch (e) {
+                        const errorText = await response.text();
+                        if (errorText) {
+                            errorMessage = errorText;
+                        }
+                    }
+                    console.error('Server error:', response.status, errorMessage);
+                    showNotification(errorMessage, 'error');
                 }
             } catch (error) {
-                console.error('Error creating project:', error);
-                showNotification('Network error. Please check your connection.', 'error');
+                console.error('Network error creating project:', error);
+                showNotification('Network error. Please check your connection and try again.', 'error');
             }
         });
 
         document.getElementById('task-form').addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            const dueDateValue = document.getElementById('task-due-date').value;
+            // Get form elements with error checking
+            const nameElement = document.getElementById('task-name');
+            const descriptionElement = document.getElementById('task-description');
+            const statusElement = document.getElementById('task-status');
+            const importanceElement = document.getElementById('task-importance');
+            const dueDateElement = document.getElementById('task-due-date');
+
+            // Check if all elements exist
+            if (!nameElement || !descriptionElement || !statusElement || !importanceElement || !dueDateElement) {
+                console.error('One or more form elements not found');
+                showNotification('Form error. Please refresh the page and try again.', 'error');
+                return;
+            }
+
+            const dueDateValue = dueDateElement.value;
+
+            // Format date to ISO string if provided
+            let formattedDueDate = null;
+            if (dueDateValue) {
+                try {
+                    formattedDueDate = new Date(dueDateValue).toISOString();
+                } catch (error) {
+                    console.error('Invalid date format:', error);
+                    showNotification('Invalid date format. Please select a valid date.', 'error');
+                    return;
+                }
+            }
 
             const taskData = {
-                name: document.getElementById('task-name').value.trim(),
-                description: document.getElementById('task-description').value.trim(),
-                status: document.getElementById('task-status').value,
-                importance: document.getElementById('task-importance').value,
-                dueDate: dueDateValue || null
+                name: nameElement.value.trim(),
+                description: descriptionElement.value.trim(),
+                status: statusElement.value,
+                importance: importanceElement.value,
+                dueDate: formattedDueDate
             };
 
             // Basic validation
@@ -1115,6 +1238,8 @@
                 showNotification('Task name is required!', 'error');
                 return;
             }
+
+            console.log('Sending task data:', taskData);
 
             try {
                 const response = await fetch('/api/tasks', {
@@ -1126,21 +1251,41 @@
                     body: JSON.stringify(taskData)
                 });
 
+                console.log('Task creation response status:', response.status);
+
                 if (response.ok) {
                     const newTask = await response.json();
+                    console.log('Task created successfully:', newTask);
                     tasks.push(newTask);
                     renderTasks();
                     hideModal('task-modal');
                     document.getElementById('task-form').reset();
                     showNotification('Task created successfully!', 'success');
                 } else {
-                    const errorText = await response.text();
-                    console.error('Server error:', response.status, errorText);
-                    showNotification('Error creating task. Please try again.', 'error');
+                    let errorMessage = 'Error creating task. Please try again.';
+                    try {
+                        const errorData = await response.json();
+                        if (errorData.message) {
+                            errorMessage = errorData.message;
+                        } else if (errorData.error) {
+                            errorMessage = errorData.error;
+                        }
+                    } catch (e) {
+                        try {
+                            const errorText = await response.text();
+                            if (errorText) {
+                                errorMessage = errorText;
+                            }
+                        } catch (textError) {
+                            console.error('Could not read error response:', textError);
+                        }
+                    }
+                    console.error('Server error creating task:', response.status, errorMessage);
+                    showNotification(errorMessage, 'error');
                 }
             } catch (error) {
-                console.error('Error creating task:', error);
-                showNotification('Network error. Please check your connection.', 'error');
+                console.error('Network error creating task:', error);
+                showNotification('Network error. Please check your connection and try again.', 'error');
             }
         });
 
@@ -1181,6 +1326,52 @@
                 }
             } catch (error) {
                 console.error('Error creating team:', error);
+                showNotification('Network error. Please check your connection.', 'error');
+            }
+        });
+
+        // ADD THIS MISSING USER FORM HANDLER - Place this right after the team-form handler (around line 450)
+
+        document.getElementById('user-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const userData = {
+                name: document.getElementById('user-name').value.trim(),
+                email: document.getElementById('user-email').value.trim(),
+                password: document.getElementById('user-password').value.trim(),
+                role: document.getElementById('user-role').value
+            };
+
+            // Basic validation
+            if (!userData.name || !userData.email || !userData.password) {
+                showNotification('All fields are required!', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/users', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(userData)
+                });
+
+                if (response.ok) {
+                    const newUser = await response.json();
+                    users.push(newUser);
+                    renderUsers();
+                    hideModal('user-modal');
+                    document.getElementById('user-form').reset();
+                    showNotification('User created successfully!', 'success');
+                } else {
+                    const errorText = await response.text();
+                    console.error('Server error:', response.status, errorText);
+                    showNotification('Error creating user. Please try again.', 'error');
+                }
+            } catch (error) {
+                console.error('Error creating user:', error);
                 showNotification('Network error. Please check your connection.', 'error');
             }
         });
