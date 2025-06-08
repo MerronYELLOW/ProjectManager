@@ -24,20 +24,17 @@ public class TaskService {
     }
 
     public Task createTask(Task task) {
-        // If project ID is provided, set the project
+        // Validate and set relationships if provided
         if (task.getProject() != null && task.getProject().getId() != null) {
-            Project project = projectRepository.findById(task.getProject().getId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Project not found"));
-            task.setProject(project);
+            task.setProject(projectRepository.findById(task.getProject().getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Project not found")));
         }
 
-        // If assignee ID is provided, set the assignee
         if (task.getAssignee() != null && task.getAssignee().getId() != null) {
             task.setAssignee(userRepository.findById(task.getAssignee().getId())
-                    .orElseThrow(() -> new ResourceNotFoundException("User not found")));
+                    .orElseThrow(() -> new ResourceNotFoundException("Assignee not found")));
         }
 
-        // If supervisor ID is provided, set the supervisor
         if (task.getSupervisor() != null && task.getSupervisor().getId() != null) {
             task.setSupervisor(userRepository.findById(task.getSupervisor().getId())
                     .orElseThrow(() -> new ResourceNotFoundException("Supervisor not found")));
@@ -49,5 +46,40 @@ public class TaskService {
     public Task getTaskById(Long id) {
         return taskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found"));
+    }
+
+    public Task updateTask(Long id, Task taskDetails) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Task not found"));
+
+        task.setName(taskDetails.getName());
+        task.setDescription(taskDetails.getDescription());
+        task.setStatus(taskDetails.getStatus());
+        task.setImportance(taskDetails.getImportance());
+        task.setDueDate(taskDetails.getDueDate());
+
+        // Update relationships if provided
+        if (taskDetails.getProject() != null && taskDetails.getProject().getId() != null) {
+            task.setProject(projectRepository.findById(taskDetails.getProject().getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Project not found")));
+        }
+
+        if (taskDetails.getAssignee() != null && taskDetails.getAssignee().getId() != null) {
+            task.setAssignee(userRepository.findById(taskDetails.getAssignee().getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Assignee not found")));
+        }
+
+        if (taskDetails.getSupervisor() != null && taskDetails.getSupervisor().getId() != null) {
+            task.setSupervisor(userRepository.findById(taskDetails.getSupervisor().getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Supervisor not found")));
+        }
+
+        return taskRepository.save(task);
+    }
+
+    public void deleteTask(Long id) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Task not found"));
+        taskRepository.delete(task);
     }
 }

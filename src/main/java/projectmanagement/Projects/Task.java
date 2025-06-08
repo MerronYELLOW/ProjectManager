@@ -1,13 +1,11 @@
 package projectmanagement.Projects;
 
+import jakarta.persistence.*;
+import lombok.Data;
 import projectmanagement.Enums.Enums.TaskStatus;
 import projectmanagement.Enums.Enums.TaskImportance;
 import projectmanagement.PackUsers.User;
-import jakarta.persistence.*;
-import lombok.Data;
-
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
 @Entity
@@ -16,10 +14,6 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "project_id")
-    private Project project;
 
     @Column(nullable = false)
     private String name;
@@ -35,6 +29,13 @@ public class Task {
     @Column(nullable = false)
     private TaskImportance importance = TaskImportance.MEDIUM;
 
+    @Column(name = "due_date")
+    private LocalDate dueDate;
+
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private Project project;
+
     @ManyToOne
     @JoinColumn(name = "assignee_id")
     private User assignee;
@@ -42,16 +43,6 @@ public class Task {
     @ManyToOne
     @JoinColumn(name = "supervisor_id")
     private User supervisor;
-
-    private LocalDate dueDate;
-
-    @Lob
-    private String completionNote;
-
-    @Lob
-    private String feedback;
-
-    private Boolean isApproved;
 
     // --- Getters and Setters ---
 
@@ -61,14 +52,6 @@ public class Task {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Project getProject() {
-        return project;
-    }
-
-    public void setProject(Project project) {
-        this.project = project;
     }
 
     public String getName() {
@@ -103,6 +86,22 @@ public class Task {
         this.importance = importance;
     }
 
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
     public User getAssignee() {
         return assignee;
     }
@@ -117,37 +116,5 @@ public class Task {
 
     public void setSupervisor(User supervisor) {
         this.supervisor = supervisor;
-    }
-
-    public LocalDate getDueDate() {
-        return dueDate;
-    }
-
-    public void setDueDate(LocalDate dueDate) {
-        this.dueDate = dueDate;
-    }
-
-    public String getCompletionNote() {
-        return completionNote;
-    }
-
-    public void setCompletionNote(String completionNote) {
-        this.completionNote = completionNote;
-    }
-
-    public String getFeedback() {
-        return feedback;
-    }
-
-    public void setFeedback(String feedback) {
-        this.feedback = feedback;
-    }
-
-    public Boolean getIsApproved() {
-        return isApproved;
-    }
-
-    public void setIsApproved(Boolean isApproved) {
-        this.isApproved = isApproved;
     }
 }

@@ -397,7 +397,13 @@
         <div class="main-content">
             <!-- Header -->
             <div class="header">
-                <h2 id="page-title">Dashboard</h2>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <h2 id="page-title">Dashboard</h2>
+                    <button class="btn btn-outline" onclick="window.refreshAllData()" style="padding: 0.5rem 1rem; font-size: 0.9rem;" title="Refresh all data (Ctrl+U)">
+                        <i data-lucide="refresh-cw"></i>
+                        Refresh
+                    </button>
+                </div>
                 <div class="user-info">
                     <div class="user-avatar">AD</div>
                     <div>
@@ -717,24 +723,24 @@
         let tasks = [];
         let teams = [];
 
-        // Navigation
+        // Enhanced section switching with data refresh
         function showSection(sectionName) {
             // Hide all sections
             document.querySelectorAll('.section').forEach(section => {
                 section.classList.add('hidden');
             });
-            
+
             // Remove active class from all nav items
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
             });
-            
+
             // Show selected section
             document.getElementById(sectionName + '-section').classList.remove('hidden');
-            
+
             // Add active class to clicked nav item
             event.target.closest('.nav-item').classList.add('active');
-            
+
             // Update page title
             const titles = {
                 'dashboard': 'Dashboard',
@@ -745,13 +751,45 @@
                 'calendar': 'Calendar'
             };
             document.getElementById('page-title').textContent = titles[sectionName];
-            
-            // Load data for the section
-            if (sectionName === 'projects') loadProjects();
-            if (sectionName === 'users') loadUsers();
-            if (sectionName === 'tasks') loadTasks();
+
+            // Load fresh data for the section - ENHANCED VERSION
+            refreshSectionData(sectionName);
         }
 
+        // New function to refresh data for specific sections
+        async function refreshSectionData(sectionName) {
+            console.log(`Refreshing data for section: ${sectionName}`);
+
+            try {
+                switch(sectionName) {
+                    case 'dashboard':
+                        // Load all data for dashboard
+                        await Promise.all([loadProjects(), loadUsers(), loadTasks(), loadTeams()]);
+                        break;
+                    case 'projects':
+                        await loadProjects();
+                        break;
+                    case 'users':
+                        await loadUsers();
+                        break;
+                    case 'tasks':
+                        await loadTasks();
+                        break;
+                    case 'teams':
+                        await loadTeams();
+                        break;
+                    case 'calendar':
+                        // Calendar might need projects and tasks for events
+                        await Promise.all([loadProjects(), loadTasks()]);
+                        break;
+                }
+
+                console.log(`Data refreshed for section: ${sectionName}`);
+            } catch (error) {
+                console.error(`Error refreshing data for section ${sectionName}:`, error);
+                showNotification(`Error loading ${sectionName} data. Please try again.`, 'error');
+            }
+        }
         // Modal functions
         function showModal(modalId) {
             document.getElementById(modalId).style.display = 'block';
@@ -1211,16 +1249,68 @@
         }
 
         // Initialize the application
+        // Initialize the application - ENHANCED VERSION
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Application starting...');
 
-            // Load initial data with a small delay to ensure backend is ready
-            setTimeout(() => {
-                loadProjects();
-                loadUsers();
-                loadTasks();
-                loadTeams();
-            }, 500);
+            // Enhanced initialization function
+            async function initializeApplication() {
+                try {
+                    console.log('Loading initial data...');
+
+                    // Load all data in parallel for better performance
+                    const loadingPromises = [
+                        loadProjects(),
+                        loadUsers(),
+                        loadTasks(),
+                        loadTeams()
+                    ];
+
+                    // Wait for all data to load
+                    await Promise.all(loadingPromises);
+
+                    console.log('All data loaded successfully');
+
+                    // Update dashboard stats after data is loaded
+                    updateDashboardStats();
+
+                } catch (error) {
+                    console.error('Error during application initialization:', error);
+                    showNotification('Error loading application data. Please refresh the page.', 'error');
+                }
+            }
+
+            // Function to update dashboard statistics
+            function updateDashboardStats() {
+                // Update project count
+                document.getElementById('total-projects').textContent = projects.length;
+
+                // Update active tasks count
+                const activeTasks = tasks.filter(task =>
+                    task.status !== 'COMPLETED' && task.status !== 'REJECTED'
+                ).length;
+                document.getElementById('active-tasks').textContent = activeTasks;
+
+                // Update team members count
+                document.getElementById('team-members').textContent = users.length;
+
+                // Calculate and update completion rate
+                const completedTasks = tasks.filter(task => task.status === 'COMPLETED').length;
+                const completionRate = tasks.length > 0 ? Math.round((completedTasks / tasks.length) * 100) : 0;
+                document.getElementById('completion-rate').textContent = completionRate + '%';
+
+                console.log('Dashboard stats updated');
+            }
+
+            // Add this function to global scope for manual refresh
+            window.refreshAllData = async function() {
+                console.log('Manual refresh triggered...');
+                await initializeApplication();
+                showNotification('Data refreshed successfully!', 'success');
+            };
+
+            // Start the initialization process immediately
+            initializeApplication();
 
             // Close modals when clicking outside
             window.addEventListener('click', function(event) {
@@ -1229,7 +1319,15 @@
                 }
             });
 
-            console.log('Application initialized');
+            // Add keyboard shortcut for manual refresh (Ctrl+R alternative)
+            document.addEventListener('keydown', function(event) {
+                if (event.ctrlKey && event.key === 'u') {
+                    event.preventDefault();
+                    window.refreshAllData();
+                }
+            });
+
+            console.log('Application initialized with enhanced data loading');
         });
     </script>
 </body>
