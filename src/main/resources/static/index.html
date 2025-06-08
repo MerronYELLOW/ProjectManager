@@ -5,1521 +5,248 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project Management System</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
-        }
-
-        .app-container {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            width: 280px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-right: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 2rem 0;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .logo {
-            padding: 0 2rem 2rem;
-            text-align: center;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
-        }
-
-        .logo h1 {
-            font-size: 1.5rem;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            padding: 1rem 2rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border-left: 3px solid transparent;
-        }
-
-        .nav-item:hover {
-            background: rgba(102, 126, 234, 0.1);
-            border-left-color: #667eea;
-        }
-
-        .nav-item.active {
-            background: rgba(102, 126, 234, 0.15);
-            border-left-color: #667eea;
-            color: #667eea;
-        }
-
-        .nav-item i {
-            margin-right: 1rem;
-            width: 20px;
-            height: 20px;
-        }
-
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            margin-left: 280px;
-            padding: 2rem;
-        }
-
-        .header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1.5rem 2rem;
-            border-radius: 20px;
-            margin-bottom: 2rem;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header h2 {
-            font-size: 2rem;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-        }
-
-        /* Content Grid */
-        .content-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-        }
-
-        .card h3 {
-            color: #667eea;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 2px solid #667eea;
-            color: #667eea;
-        }
-
-        .btn-outline:hover {
-            background: #667eea;
-            color: white;
-        }
-
-        /* Tables */
-        .table-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        th {
-            background: rgba(102, 126, 234, 0.1);
-            font-weight: 600;
-            color: #667eea;
-        }
-
-        tr:hover {
-            background: rgba(102, 126, 234, 0.05);
-        }
-
-        /* Status badges */
-        .status-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 50px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            text-transform: uppercase;
-        }
-
-        .status-pending { background: #fef3c7; color: #d97706; }
-        .status-in-progress { background: #dbeafe; color: #2563eb; }
-        .status-completed { background: #d1fae5; color: #059669; }
-        .status-cancelled { background: #fee2e2; color: #dc2626; }
-
-        .importance-low { background: #f3f4f6; color: #6b7280; }
-        .importance-medium { background: #fef3c7; color: #d97706; }
-        .importance-high { background: #fee2e2; color: #dc2626; }
-        .importance-critical { background: #fecaca; color: #991b1b; }
-        .importance-strategic { background: #ede9fe; color: #7c3aed; }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
-            z-index: 1000;
-        }
-
-        .modal-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 2rem;
-            border-radius: 20px;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #374151;
-            font-weight: 500;
-        }
-
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%;
-            padding: 0.75rem;
-            border: 2px solid #e5e7eb;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #6b7280;
-        }
-
-        .close:hover {
-            color: #374151;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                position: static;
-                height: auto;
-            }
-
-            .main-content {
-                margin-left: 0;
-                padding: 1rem;
-            }
-
-            .content-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .header {
-                flex-direction: column;
-                gap: 1rem;
-                text-align: center;
-            }
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 1.5rem;
-            text-align: center;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #667eea;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            color: #6b7280;
-            font-size: 0.9rem;
-        }
-
-        .hidden {
-            display: none;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="app-container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="logo">
-                <h1>ProjectHub</h1>
+<div class="app-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <h1>ProjectHub</h1>
+        </div>
+        <nav>
+            <div class="nav-item active" onclick="showSection('dashboard')">
+                <i data-lucide="home"></i>
+                <span>Dashboard</span>
             </div>
-            <nav>
-                <div class="nav-item active" onclick="showSection('dashboard')">
-                    <i data-lucide="home"></i>
-                    <span>Dashboard</span>
+            <div class="nav-item" onclick="showSection('projects')">
+                <i data-lucide="folder"></i>
+                <span>Projects</span>
+            </div>
+            <div class="nav-item" onclick="showSection('tasks')">
+                <i data-lucide="check-square"></i>
+                <span>Tasks</span>
+            </div>
+            <div class="nav-item" onclick="showSection('users')">
+                <i data-lucide="users"></i>
+                <span>Users</span>
+            </div>
+            <div class="nav-item" onclick="showSection('teams')">
+                <i data-lucide="users-2"></i>
+                <span>Teams</span>
+            </div>
+            <div class="nav-item" onclick="showSection('calendar')">
+                <i data-lucide="calendar"></i>
+                <span>Calendar</span>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <h2 id="page-title">Dashboard</h2>
+                <button class="btn btn-outline" onclick="window.refreshAllData()" style="padding: 0.5rem 1rem; font-size: 0.9rem;" title="Refresh all data (Ctrl+U)">
+                    <i data-lucide="refresh-cw"></i>
+                    Refresh
+                </button>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">AD</div>
+                <div>
+                    <div style="font-weight: 600;">Admin User</div>
+                    <div style="font-size: 0.8rem; color: #6b7280;">admin@example.com</div>
                 </div>
-                <div class="nav-item" onclick="showSection('projects')">
-                    <i data-lucide="folder"></i>
-                    <span>Projects</span>
-                </div>
-                <div class="nav-item" onclick="showSection('tasks')">
-                    <i data-lucide="check-square"></i>
-                    <span>Tasks</span>
-                </div>
-                <div class="nav-item" onclick="showSection('users')">
-                    <i data-lucide="users"></i>
-                    <span>Users</span>
-                </div>
-                <div class="nav-item" onclick="showSection('teams')">
-                    <i data-lucide="users-2"></i>
-                    <span>Teams</span>
-                </div>
-                <div class="nav-item" onclick="showSection('calendar')">
-                    <i data-lucide="calendar"></i>
-                    <span>Calendar</span>
-                </div>
-            </nav>
+            </div>
         </div>
 
-        <!-- Main Content -->
-        <div class="main-content">
-            <!-- Header -->
-            <div class="header">
-                <div style="display: flex; align-items: center; gap: 1rem;">
-                    <h2 id="page-title">Dashboard</h2>
-                    <button class="btn btn-outline" onclick="window.refreshAllData()" style="padding: 0.5rem 1rem; font-size: 0.9rem;" title="Refresh all data (Ctrl+U)">
-                        <i data-lucide="refresh-cw"></i>
-                        Refresh
-                    </button>
+        <!-- Dashboard Section -->
+        <div id="dashboard-section" class="section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="total-projects">3</div>
+                    <div class="stat-label">Total Projects</div>
                 </div>
-                <div class="user-info">
-                    <div class="user-avatar">AD</div>
-                    <div>
-                        <div style="font-weight: 600;">Admin User</div>
-                        <div style="font-size: 0.8rem; color: #6b7280;">admin@example.com</div>
-                    </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="active-tasks">12</div>
+                    <div class="stat-label">Active Tasks</div>
                 </div>
-            </div>
-
-            <!-- Dashboard Section -->
-            <div id="dashboard-section" class="section">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-number" id="total-projects">3</div>
-                        <div class="stat-label">Total Projects</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="active-tasks">12</div>
-                        <div class="stat-label">Active Tasks</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="team-members">8</div>
-                        <div class="stat-label">Team Members</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="completion-rate">85%</div>
-                        <div class="stat-label">Completion Rate</div>
-                    </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="team-members">8</div>
+                    <div class="stat-label">Team Members</div>
                 </div>
-
-                <div class="content-grid">
-                    <div class="card">
-                        <h3><i data-lucide="trending-up"></i>Recent Activity</h3>
-                        <div id="recent-activity">
-                            <p>• Project Runway status updated to In Progress</p>
-                            <p>• New task assigned to John Doe</p>
-                            <p>• Meeting scheduled for tomorrow</p>
-                            <p>• Document uploaded to Marketing Campaign</p>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <h3><i data-lucide="alert-circle"></i>Upcoming Deadlines</h3>
-                        <div id="upcoming-deadlines">
-                            <p>• Project Runway - June 21, 2025</p>
-                            <p>• Marketing Review - June 15, 2025</p>
-                            <p>• Team Meeting - June 10, 2025</p>
-                        </div>
-                    </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="completion-rate">85%</div>
+                    <div class="stat-label">Completion Rate</div>
                 </div>
             </div>
 
-            <!-- Projects Section -->
-            <div id="projects-section" class="section hidden">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                    <h3>All Projects</h3>
-                    <button class="btn" onclick="showModal('project-modal')">
-                        <i data-lucide="plus"></i>
-                        Add Project
-                    </button>
-                </div>
-                <div class="table-container">
-                    <table id="projects-table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Status</th>
-                                <th>Importance</th>
-                                <th>Due Date</th>
-                                <th>Project Lead</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="projects-tbody">
-                            <!-- Projects will be populated here -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Tasks Section -->
-            <div id="tasks-section" class="section hidden">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                    <h3>All Tasks</h3>
-                    <button class="btn" onclick="showModal('task-modal')">
-                        <i data-lucide="plus"></i>
-                        Add Task
-                    </button>
-                </div>
-                <div class="table-container">
-                    <table id="tasks-table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Project</th>
-                                <th>Status</th>
-                                <th>Importance</th>
-                                <th>Assignee</th>
-                                <th>Due Date</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tasks-tbody">
-                            <!-- Tasks will be populated here -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Users Section -->
-            <div id="users-section" class="section hidden">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                    <h3>All Users</h3>
-                    <button class="btn" onclick="showModal('user-modal')">
-                        <i data-lucide="plus"></i>
-                        Add User
-                    </button>
-                </div>
-                <div class="table-container">
-                    <table id="users-table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th>Team</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="users-tbody">
-                            <!-- Users will be populated here -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Teams Section -->
-            <div id="teams-section" class="section hidden">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                    <h3>All Teams</h3>
-                    <button class="btn" onclick="showModal('team-modal')">
-                        <i data-lucide="plus"></i>
-                        Add Team
-                    </button>
-                </div>
-                <div class="content-grid">
-                    <div class="card">
-                        <h3><i data-lucide="users"></i>Development Team</h3>
-                        <p>Supervisor: John Doe</p>
-                        <p>Members: 5</p>
-                        <button class="btn btn-outline">View Details</button>
-                    </div>
-                    <div class="card">
-                        <h3><i data-lucide="users"></i>Marketing Team</h3>
-                        <p>Supervisor: Jane Smith</p>
-                        <p>Members: 3</p>
-                        <button class="btn btn-outline">View Details</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Calendar Section -->
-            <div id="calendar-section" class="section hidden">
-                <h3>Project Calendar</h3>
+            <div class="content-grid">
                 <div class="card">
-                    <h3><i data-lucide="calendar-days"></i>Upcoming Events</h3>
-                    <div>
-                        <p><strong>June 10, 2025</strong> - Team Meeting (MEETING)</p>
-                        <p><strong>June 15, 2025</strong> - Marketing Review (REVIEW)</p>
-                        <p><strong>June 21, 2025</strong> - Project Runway Deadline (DEADLINE)</p>
+                    <h3><i data-lucide="trending-up"></i>Recent Activity</h3>
+                    <div id="recent-activity">
+                        <p>• Project Runway status updated to In Progress</p>
+                        <p>• New task assigned to John Doe</p>
+                        <p>• Meeting scheduled for tomorrow</p>
+                        <p>• Document uploaded to Marketing Campaign</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3><i data-lucide="alert-circle"></i>Upcoming Deadlines</h3>
+                    <div id="upcoming-deadlines">
+                        <p>• Project Runway - June 21, 2025</p>
+                        <p>• Marketing Review - June 15, 2025</p>
+                        <p>• Team Meeting - June 10, 2025</p>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Modals -->
-    <!-- Project Modal -->
-    <div id="project-modal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="hideModal('project-modal')">&times;</span>
-            <h3>Add New Project</h3>
-            <form id="project-form">
-                <div class="form-group">
-                    <label for="project-name">Project Name</label>
-                    <input type="text" id="project-name" required>
+        <!-- Projects Section -->
+        <div id="projects-section" class="section hidden">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h3>All Projects</h3>
+                <button class="btn" onclick="showModal('project-modal')">
+                    <i data-lucide="plus"></i>
+                    Add Project
+                </button>
+            </div>
+            <div class="table-container">
+                <table id="projects-table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Importance</th>
+                        <th>Due Date</th>
+                        <th>Project Lead</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="projects-tbody">
+                    <!-- Projects will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tasks Section -->
+        <div id="tasks-section" class="section hidden">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h3>All Tasks</h3>
+                <button class="btn" onclick="showModal('task-modal')">
+                    <i data-lucide="plus"></i>
+                    Add Task
+                </button>
+            </div>
+            <div class="table-container">
+                <table id="tasks-table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Project</th>
+                        <th>Status</th>
+                        <th>Importance</th>
+                        <th>Assignee</th>
+                        <th>Due Date</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tasks-tbody">
+                    <!-- Tasks will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Users Section -->
+        <div id="users-section" class="section hidden">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h3>All Users</h3>
+                <button class="btn" onclick="showModal('user-modal')">
+                    <i data-lucide="plus"></i>
+                    Add User
+                </button>
+            </div>
+            <div class="table-container">
+                <table id="users-table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Team</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="users-tbody">
+                    <!-- Users will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Teams Section -->
+        <div id="teams-section" class="section hidden">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h3>All Teams</h3>
+                <button class="btn" onclick="showModal('team-modal')">
+                    <i data-lucide="plus"></i>
+                    Add Team
+                </button>
+            </div>
+            <div class="content-grid">
+                <div class="card">
+                    <h3><i data-lucide="users"></i>Development Team</h3>
+                    <p>Supervisor: John Doe</p>
+                    <p>Members: 5</p>
+                    <button class="btn btn-outline">View Details</button>
                 </div>
-                <div class="form-group">
-                    <label for="project-description">Description</label>
-                    <textarea id="project-description" rows="3"></textarea>
+                <div class="card">
+                    <h3><i data-lucide="users"></i>Marketing Team</h3>
+                    <p>Supervisor: Jane Smith</p>
+                    <p>Members: 3</p>
+                    <button class="btn btn-outline">View Details</button>
                 </div>
-                <div class="form-group">
-                    <label for="project-status">Status</label>
-                    <select id="project-status">
-                        <option value="PENDING">Pending</option>
-                        <option value="IN_PROGRESS">In Progress</option>
-                        <option value="COMPLETED">Completed</option>
-                        <option value="CANCELLED">Cancelled</option>
-                    </select>
+            </div>
+        </div>
+
+        <!-- Calendar Section -->
+        <div id="calendar-section" class="section hidden">
+            <h3>Project Calendar</h3>
+            <div class="card">
+                <h3><i data-lucide="calendar-days"></i>Upcoming Events</h3>
+                <div>
+                    <p><strong>June 10, 2025</strong> - Team Meeting (MEETING)</p>
+                    <p><strong>June 15, 2025</strong> - Marketing Review (REVIEW)</p>
+                    <p><strong>June 21, 2025</strong> - Project Runway Deadline (DEADLINE)</p>
                 </div>
-                <div class="form-group">
-                    <label for="project-importance">Importance</label>
-                    <select id="project-importance">
-                        <option value="LOW">Low</option>
-                        <option value="MEDIUM">Medium</option>
-                        <option value="HIGH">High</option>
-                        <option value="STRATEGIC">Strategic</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="project-due-date">Due Date</label>
-                    <input type="date" id="project-due-date">
-                </div>
-                <button type="submit" class="btn">Create Project</button>
-            </form>
+            </div>
         </div>
     </div>
-
-    <!-- User Modal -->
-    <div id="user-modal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="hideModal('user-modal')">&times;</span>
-            <h3>Add New User</h3>
-            <form id="user-form">
-                <div class="form-group">
-                    <label for="user-name">Name</label>
-                    <input type="text" id="user-name" required>
-                </div>
-                <div class="form-group">
-                    <label for="user-email">Email</label>
-                    <input type="email" id="user-email" required>
-                </div>
-                <div class="form-group">
-                    <label for="user-password">Password</label>
-                    <input type="password" id="user-password" required>
-                </div>
-                <div class="form-group">
-                    <label for="user-role">Role</label>
-                    <select id="user-role">
-                        <option value="EMPLOYEE">Employee</option>
-                        <option value="PROJECT_CREATOR">Project Creator</option>
-                        <option value="PROJECT_LEAD">Project Lead</option>
-                        <option value="DIRECT_SUPERVISOR">Direct Supervisor</option>
-                        <option value="SUPER_USER">Super User</option>
-                        <option value="ADMIN">Admin</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn">Create User</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Task Modal -->
-    <div id="task-modal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="hideModal('task-modal')">&times;</span>
-            <h3>Add New Task</h3>
-            <form id="task-form">
-                <div class="form-group">
-                    <label for="task-name">Task Name</label>
-                    <input type="text" id="task-name" required>
-                </div>
-                <div class="form-group">
-                    <label for="task-description">Description</label>
-                    <textarea id="task-description" rows="3"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="task-status">Status</label>
-                    <select id="task-status">
-                        <option value="TODO">To Do</option>
-                        <option value="IN_PROGRESS">In Progress</option>
-                        <option value="UNDER_REVIEW">Under Review</option>
-                        <option value="COMPLETED">Completed</option>
-                        <option value="REJECTED">Rejected</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="task-importance">Importance</label>
-                    <select id="task-importance">
-                        <option value="LOW">Low</option>
-                        <option value="MEDIUM">Medium</option>
-                        <option value="HIGH">High</option>
-                        <option value="CRITICAL">Critical</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="task-due-date">Due Date</label>
-                    <input type="date" id="task-due-date">
-                </div>
-                <button type="submit" class="btn">Create Task</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Team Modal -->
-    <div id="team-modal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="hideModal('team-modal')">&times;</span>
-            <h3>Add New Team</h3>
-            <form id="team-form">
-                <div class="form-group">
-                    <label for="team-name">Team Name</label>
-                    <input type="text" id="team-name" required>
-                </div>
-                <button type="submit" class="btn">Create Team</button>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        // Initialize Lucide icons
-        lucide.createIcons();
-
-        // Application state
-        let currentUser = { id: 1, name: 'Admin User', email: 'admin@example.com', role: 'ADMIN' };
-        let projects = [];
-        let users = [];
-        let tasks = [];
-        let teams = [];
-
-        // Enhanced section switching with data refresh
-        function showSection(sectionName) {
-            // Hide all sections
-            document.querySelectorAll('.section').forEach(section => {
-                section.classList.add('hidden');
-            });
-
-            // Remove active class from all nav items
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-
-            // Show selected section
-            document.getElementById(sectionName + '-section').classList.remove('hidden');
-
-            // Add active class to clicked nav item
-            event.target.closest('.nav-item').classList.add('active');
-
-            // Update page title
-            const titles = {
-                'dashboard': 'Dashboard',
-                'projects': 'Projects',
-                'tasks': 'Tasks',
-                'users': 'Users',
-                'teams': 'Teams',
-                'calendar': 'Calendar'
-            };
-            document.getElementById('page-title').textContent = titles[sectionName];
-
-            // Load fresh data for the section - ENHANCED VERSION
-            refreshSectionData(sectionName);
-        }
-
-        // New function to refresh data for specific sections
-        async function refreshSectionData(sectionName) {
-            console.log(`Refreshing data for section: ${sectionName}`);
-
-            try {
-                switch(sectionName) {
-                    case 'dashboard':
-                        // Load all data for dashboard
-                        await Promise.all([loadProjects(), loadUsers(), loadTasks(), loadTeams()]);
-                        break;
-                    case 'projects':
-                        await loadProjects();
-                        break;
-                    case 'users':
-                        await loadUsers();
-                        break;
-                    case 'tasks':
-                        await loadTasks();
-                        break;
-                    case 'teams':
-                        await loadTeams();
-                        break;
-                    case 'calendar':
-                        // Calendar might need projects and tasks for events
-                        await Promise.all([loadProjects(), loadTasks()]);
-                        break;
-                }
-
-                console.log(`Data refreshed for section: ${sectionName}`);
-            } catch (error) {
-                console.error(`Error refreshing data for section ${sectionName}:`, error);
-                showNotification(`Error loading ${sectionName} data. Please try again.`, 'error');
-            }
-        }
-        // Modal functions
-        function showModal(modalId) {
-            document.getElementById(modalId).style.display = 'block';
-        }
-
-        function hideModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
-
-        // API functions - Updated to handle backend properly
-        async function loadProjects() {
-            try {
-                const response = await fetch('/api/projects', {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (response.ok) {
-                    projects = await response.json();
-                    console.log('Projects loaded:', projects);
-                    renderProjects();
-                } else {
-                    console.error('Failed to load projects:', response.status, response.statusText);
-                    projects = [];
-                    renderProjects();
-                }
-            } catch (error) {
-                console.error('Error loading projects:', error);
-                projects = [];
-                renderProjects();
-            }
-        }
-
-        async function loadUsers() {
-            try {
-                const response = await fetch('/api/users', {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (response.ok) {
-                    users = await response.json();
-                    console.log('Users loaded:', users);
-                    renderUsers();
-                } else {
-                    console.error('Failed to load users:', response.status, response.statusText);
-                    users = [];
-                    renderUsers();
-                }
-            } catch (error) {
-                console.error('Error loading users:', error);
-                users = [];
-                renderUsers();
-            }
-        }
-
-        async function loadTasks() {
-            try {
-                const response = await fetch('/api/tasks', {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (response.ok) {
-                    tasks = await response.json();
-                    console.log('Tasks loaded:', tasks);
-                    renderTasks();
-                } else {
-                    console.error('Failed to load tasks:', response.status, response.statusText);
-                    tasks = [];
-                    renderTasks();
-                }
-            } catch (error) {
-                console.error('Error loading tasks:', error);
-                tasks = [];
-                renderTasks();
-            }
-        }
-
-        async function loadTeams() {
-            try {
-                const response = await fetch('/api/teams', {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (response.ok) {
-                    teams = await response.json();
-                    console.log('Teams loaded:', teams);
-                    renderTeams();
-                } else {
-                    console.error('Failed to load teams:', response.status, response.statusText);
-                    teams = [];
-                    renderTeams();
-                }
-            } catch (error) {
-                console.error('Error loading teams:', error);
-                teams = [];
-                renderTeams();
-            }
-        }
-
-        // Render functions - Updated to handle empty states
-        function renderProjects() {
-            const tbody = document.getElementById('projects-tbody');
-            tbody.innerHTML = '';
-
-            if (projects.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #6b7280; padding: 2rem;">No projects found. Create your first project!</td></tr>';
-            } else {
-                projects.forEach(project => {
-                    const row = document.createElement('tr');
-                    const statusClass = project.status ? project.status.toLowerCase().replace('_', '-') : 'pending';
-                    const importanceClass = project.importance ? project.importance.toLowerCase() : 'low';
-
-                    // Format date properly
-                    let formattedDate = 'No deadline';
-                    if (project.dueDate) {
-                        try {
-                            const date = new Date(project.dueDate);
-                            formattedDate = date.toLocaleDateString();
-                        } catch (e) {
-                            formattedDate = project.dueDate;
-                        }
-                    }
-
-                    row.innerHTML = `
-                        <td><strong>${project.name || 'Unnamed Project'}</strong></td>
-                        <td><span class="status-badge status-${statusClass}">${project.status || 'PENDING'}</span></td>
-                        <td><span class="status-badge importance-${importanceClass}">${project.importance || 'LOW'}</span></td>
-                        <td>${formattedDate}</td>
-                        <td>${project.projectLead ? project.projectLead.name : 'Unassigned'}</td>
-                        <td>
-                            <button class="btn btn-outline" onclick="viewProject(${project.id})" style="margin-right: 0.5rem;">View</button>
-                        </td>
-                    `;
-                    tbody.appendChild(row);
-                });
-            }
-
-            // Update dashboard stats
-            document.getElementById('total-projects').textContent = projects.length;
-        }
-
-        function renderUsers() {
-            const tbody = document.getElementById('users-tbody');
-            tbody.innerHTML = '';
-
-            if (users.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #6b7280; padding: 2rem;">No users found.</td></tr>';
-            } else {
-                users.forEach(user => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td><strong>${user.name || 'Unnamed User'}</strong></td>
-                        <td>${user.email || 'No email'}</td>
-                        <td><span class="status-badge importance-medium">${user.role || 'EMPLOYEE'}</span></td>
-                        <td>${user.team ? user.team.name : 'No team assigned'}</td>
-                        <td>
-                            <button class="btn btn-outline" onclick="viewUser(${user.id})">View</button>
-                        </td>
-                    `;
-                    tbody.appendChild(row);
-                });
-            }
-
-            // Update dashboard stats
-            document.getElementById('team-members').textContent = users.length;
-        }
-
-        function renderTasks() {
-            const tbody = document.getElementById('tasks-tbody');
-            tbody.innerHTML = '';
-
-            if (tasks.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #6b7280; padding: 2rem;">No tasks found. Create your first task!</td></tr>';
-            } else {
-                tasks.forEach(task => {
-                    const row = document.createElement('tr');
-                    const statusClass = getStatusClass(task.status);
-                    const importanceClass = task.importance ? task.importance.toLowerCase() : 'low';
-
-                    // Format date properly
-                    let formattedDate = 'No deadline';
-                    if (task.dueDate) {
-                        try {
-                            const date = new Date(task.dueDate);
-                            formattedDate = date.toLocaleDateString();
-                        } catch (e) {
-                            formattedDate = task.dueDate;
-                        }
-                    }
-
-                    row.innerHTML = `
-                        <td><strong>${task.name || 'Unnamed Task'}</strong></td>
-                        <td>${task.project ? task.project.name : 'No project'}</td>
-                        <td><span class="status-badge status-${statusClass}">${formatStatus(task.status)}</span></td>
-                        <td><span class="status-badge importance-${importanceClass}">${task.importance || 'LOW'}</span></td>
-                        <td>${task.assignee ? task.assignee.name : 'Unassigned'}</td>
-                        <td>${formattedDate}</td>
-                        <td>
-                            <button class="btn btn-outline" onclick="viewTask(${task.id})">View</button>
-                        </td>
-                    `;
-                    tbody.appendChild(row);
-                });
-            }
-
-            // Update dashboard stats
-            const activeTasks = tasks.filter(task =>
-                task.status !== 'COMPLETED' && task.status !== 'REJECTED'
-            ).length;
-            document.getElementById('active-tasks').textContent = activeTasks;
-
-            // Calculate completion rate
-            const completedTasks = tasks.filter(task => task.status === 'COMPLETED').length;
-            const completionRate = tasks.length > 0 ? Math.round((completedTasks / tasks.length) * 100) : 0;
-            document.getElementById('completion-rate').textContent = completionRate + '%';
-        }
-
-        function renderTeams() {
-            console.log('Teams loaded:', teams.length);
-            // Teams section could be enhanced here if needed
-        }
-
-        function logApiError(operation, response, error) {
-            console.group(`API Error - ${operation}`);
-            if (response) {
-                console.log('Status:', response.status);
-                console.log('Status Text:', response.statusText);
-                console.log('URL:', response.url);
-            }
-            if (error) {
-                console.log('Error:', error);
-            }
-            console.groupEnd();
-        }
-
-        // Notification function
-        function showNotification(message, type) {
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            notification.textContent = message;
-            document.body.appendChild(notification);
-
-            setTimeout(() => {
-                notification.remove();
-            }, 3000);
-        }
-
-        // Initial data load
-        window.addEventListener('DOMContentLoaded', () => {
-            console.log('Loading initial data...');
-            loadProjects();
-            loadUsers();
-            loadTasks();
-            loadTeams();
-        });
-
-        // Refresh all data handler
-        window.refreshAllData = async function() {
-            console.log('Refreshing all data...');
-            await Promise.all([loadProjects(), loadUsers(), loadTasks(), loadTeams()]);
-            showNotification('All data refreshed successfully!', 'success');
-        };
-
-        // Section navigation handler
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', function(event) {
-                const sectionName = event.currentTarget.textContent.trim().toLowerCase();
-                showSection(sectionName);
-            });
-        });
-
-        // View functions
-        function viewProject(projectId) {
-            console.log('Viewing project:', projectId);
-            // Implement project viewing logic here
-        }
-
-        function viewUser(userId) {
-            console.log('Viewing user:', userId);
-            // Implement user viewing logic here
-        }
-
-        function viewTask(taskId) {
-            console.log('Viewing task:', taskId);
-            // Implement task viewing logic here
-        }
-
-        // Helper functions
-        function getStatusClass(status) {
-            if (!status) return 'pending';
-
-            const statusMap = {
-                'TODO': 'pending',
-                'IN_PROGRESS': 'in-progress',
-                'UNDER_REVIEW': 'pending',
-                'COMPLETED': 'completed',
-                'REJECTED': 'cancelled',
-                'PENDING': 'pending',
-                'CANCELLED': 'cancelled'
-            };
-
-            return statusMap[status] || 'pending';
-        }
-
-        function formatStatus(status) {
-            if (!status) return 'TODO';
-            return status.replace('_', ' ');
-        }
-
-        //PROJECT FORM HANDLER
-
-        document.getElementById('project-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            const dueDateValue = document.getElementById('project-due-date').value;
-
-            // Format date to ISO string if provided
-            let formattedDueDate = null;
-            if (dueDateValue) {
-                try {
-                    formattedDueDate = new Date(dueDateValue).toISOString();
-                } catch (error) {
-                    console.error('Invalid date format:', error);
-                    showNotification('Invalid date format. Please select a valid date.', 'error');
-                    return;
-                }
-            }
-
-            const projectData = {
-                name: document.getElementById('project-name').value.trim(),
-                description: document.getElementById('project-description').value.trim(),
-                status: document.getElementById('project-status').value,
-                importance: document.getElementById('project-importance').value,
-                dueDate: formattedDueDate
-            };
-
-            // Basic validation
-            if (!projectData.name) {
-                showNotification('Project name is required!', 'error');
-                return;
-            }
-
-            console.log('Sending project data:', projectData);
-
-            try {
-                const response = await fetch('/api/projects', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(projectData)
-                });
-
-                console.log('Response status:', response.status);
-                console.log('Response headers:', response.headers);
-
-                if (response.ok) {
-                    const newProject = await response.json();
-                    console.log('Project created successfully:', newProject);
-                    projects.push(newProject);
-                    renderProjects();
-                    hideModal('project-modal');
-                    document.getElementById('project-form').reset();
-                    showNotification('Project created successfully!', 'success');
-                } else {
-                    let errorMessage = 'Error creating project. Please try again.';
-                    try {
-                        const errorData = await response.json();
-                        if (errorData.message) {
-                            errorMessage = errorData.message;
-                        } else if (errorData.error) {
-                            errorMessage = errorData.error;
-                        }
-                    } catch (e) {
-                        const errorText = await response.text();
-                        if (errorText) {
-                            errorMessage = errorText;
-                        }
-                    }
-                    console.error('Server error:', response.status, errorMessage);
-                    showNotification(errorMessage, 'error');
-                }
-            } catch (error) {
-                console.error('Network error creating project:', error);
-                showNotification('Network error. Please check your connection and try again.', 'error');
-            }
-        });
-
-        document.getElementById('task-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            // Get form elements with error checking
-            const nameElement = document.getElementById('task-name');
-            const descriptionElement = document.getElementById('task-description');
-            const statusElement = document.getElementById('task-status');
-            const importanceElement = document.getElementById('task-importance');
-            const dueDateElement = document.getElementById('task-due-date');
-
-            // Check if all elements exist
-            if (!nameElement || !descriptionElement || !statusElement || !importanceElement || !dueDateElement) {
-                console.error('One or more form elements not found');
-                showNotification('Form error. Please refresh the page and try again.', 'error');
-                return;
-            }
-
-            const dueDateValue = dueDateElement.value;
-
-            // Format date to ISO string if provided
-            let formattedDueDate = null;
-            if (dueDateValue) {
-                try {
-                    formattedDueDate = new Date(dueDateValue).toISOString();
-                } catch (error) {
-                    console.error('Invalid date format:', error);
-                    showNotification('Invalid date format. Please select a valid date.', 'error');
-                    return;
-                }
-            }
-
-            const taskData = {
-                name: nameElement.value.trim(),
-                description: descriptionElement.value.trim(),
-                status: statusElement.value,
-                importance: importanceElement.value,
-                dueDate: formattedDueDate
-            };
-
-            // Basic validation
-            if (!taskData.name) {
-                showNotification('Task name is required!', 'error');
-                return;
-            }
-
-            console.log('Sending task data:', taskData);
-
-            try {
-                const response = await fetch('/api/tasks', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(taskData)
-                });
-
-                console.log('Task creation response status:', response.status);
-
-                if (response.ok) {
-                    const newTask = await response.json();
-                    console.log('Task created successfully:', newTask);
-                    tasks.push(newTask);
-                    renderTasks();
-                    hideModal('task-modal');
-                    document.getElementById('task-form').reset();
-                    showNotification('Task created successfully!', 'success');
-                } else {
-                    let errorMessage = 'Error creating task. Please try again.';
-                    try {
-                        const errorData = await response.json();
-                        if (errorData.message) {
-                            errorMessage = errorData.message;
-                        } else if (errorData.error) {
-                            errorMessage = errorData.error;
-                        }
-                    } catch (e) {
-                        try {
-                            const errorText = await response.text();
-                            if (errorText) {
-                                errorMessage = errorText;
-                            }
-                        } catch (textError) {
-                            console.error('Could not read error response:', textError);
-                        }
-                    }
-                    console.error('Server error creating task:', response.status, errorMessage);
-                    showNotification(errorMessage, 'error');
-                }
-            } catch (error) {
-                console.error('Network error creating task:', error);
-                showNotification('Network error. Please check your connection and try again.', 'error');
-            }
-        });
-
-        document.getElementById('team-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            const teamData = {
-                name: document.getElementById('team-name').value.trim()
-            };
-
-            // Basic validation
-            if (!teamData.name) {
-                showNotification('Team name is required!', 'error');
-                return;
-            }
-
-            try {
-                const response = await fetch('/api/teams', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(teamData)
-                });
-
-                if (response.ok) {
-                    const newTeam = await response.json();
-                    teams.push(newTeam);
-                    await loadTeams(); // Reload teams to update the display
-                    hideModal('team-modal');
-                    document.getElementById('team-form').reset();
-                    showNotification('Team created successfully!', 'success');
-                } else {
-                    const errorText = await response.text();
-                    console.error('Server error:', response.status, errorText);
-                    showNotification('Error creating team. Please try again.', 'error');
-                }
-            } catch (error) {
-                console.error('Error creating team:', error);
-                showNotification('Network error. Please check your connection.', 'error');
-            }
-        });
-
-        // ADD THIS MISSING USER FORM HANDLER - Place this right after the team-form handler (around line 450)
-
-        document.getElementById('user-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            const userData = {
-                name: document.getElementById('user-name').value.trim(),
-                email: document.getElementById('user-email').value.trim(),
-                password: document.getElementById('user-password').value.trim(),
-                role: document.getElementById('user-role').value
-            };
-
-            // Basic validation
-            if (!userData.name || !userData.email || !userData.password) {
-                showNotification('All fields are required!', 'error');
-                return;
-            }
-
-            try {
-                const response = await fetch('/api/users', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(userData)
-                });
-
-                if (response.ok) {
-                    const newUser = await response.json();
-                    users.push(newUser);
-                    renderUsers();
-                    hideModal('user-modal');
-                    document.getElementById('user-form').reset();
-                    showNotification('User created successfully!', 'success');
-                } else {
-                    const errorText = await response.text();
-                    console.error('Server error:', response.status, errorText);
-                    showNotification('Error creating user. Please try again.', 'error');
-                }
-            } catch (error) {
-                console.error('Error creating user:', error);
-                showNotification('Network error. Please check your connection.', 'error');
-            }
-        });
-
-        // Enhanced notification function
-        function showNotification(message, type) {
-            // Create a simple toast notification
-            const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                padding: 1rem 1.5rem;
-                border-radius: 10px;
-                color: white;
-                font-weight: 500;
-                z-index: 10000;
-                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-                transform: translateX(400px);
-                transition: transform 0.3s ease;
-            `;
-
-            if (type === 'error') {
-                notification.style.background = 'linear-gradient(135deg, #dc2626, #b91c1c)';
-            } else {
-                notification.style.background = 'linear-gradient(135deg, #059669, #047857)';
-            }
-
-            notification.textContent = message;
-            document.body.appendChild(notification);
-
-            // Animate in
-            setTimeout(() => {
-                notification.style.transform = 'translateX(0)';
-            }, 100);
-
-            // Remove after 3 seconds
-            setTimeout(() => {
-                notification.style.transform = 'translateX(400px)';
-                setTimeout(() => {
-                    document.body.removeChild(notification);
-                }, 300);
-            }, 3000);
-        }
-
-        // View functions (placeholder implementations)
-        function viewProject(id) {
-            const project = projects.find(p => p.id === id);
-            if (project) {
-                alert(`Project: ${project.name}\nDescription: ${project.description || 'No description'}\nStatus: ${project.status}\nImportance: ${project.importance}`);
-            }
-        }
-
-        function viewUser(id) {
-            const user = users.find(u => u.id === id);
-            if (user) {
-                alert(`User: ${user.name}\nEmail: ${user.email}\nRole: ${user.role}`);
-            }
-        }
-
-        function viewTask(id) {
-            const task = tasks.find(t => t.id === id);
-            if (task) {
-                alert(`Task: ${task.name}\nDescription: ${task.description || 'No description'}\nStatus: ${task.status}\nImportance: ${task.importance}`);
-            }
-        }
-
-        // Initialize the application
-        // Initialize the application - ENHANCED VERSION
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('Application starting...');
-
-            // Enhanced initialization function
-            async function initializeApplication() {
-                try {
-                    console.log('Loading initial data...');
-
-                    // Load all data in parallel for better performance
-                    const loadingPromises = [
-                        loadProjects(),
-                        loadUsers(),
-                        loadTasks(),
-                        loadTeams()
-                    ];
-
-                    // Wait for all data to load
-                    await Promise.all(loadingPromises);
-
-                    console.log('All data loaded successfully');
-
-                    // Update dashboard stats after data is loaded
-                    updateDashboardStats();
-
-                } catch (error) {
-                    console.error('Error during application initialization:', error);
-                    showNotification('Error loading application data. Please refresh the page.', 'error');
-                }
-            }
-
-            // Function to update dashboard statistics
-            function updateDashboardStats() {
-                // Update project count
-                document.getElementById('total-projects').textContent = projects.length;
-
-                // Update active tasks count
-                const activeTasks = tasks.filter(task =>
-                    task.status !== 'COMPLETED' && task.status !== 'REJECTED'
-                ).length;
-                document.getElementById('active-tasks').textContent = activeTasks;
-
-                // Update team members count
-                document.getElementById('team-members').textContent = users.length;
-
-                // Calculate and update completion rate
-                const completedTasks = tasks.filter(task => task.status === 'COMPLETED').length;
-                const completionRate = tasks.length > 0 ? Math.round((completedTasks / tasks.length) * 100) : 0;
-                document.getElementById('completion-rate').textContent = completionRate + '%';
-
-                console.log('Dashboard stats updated');
-            }
-
-            // Add this function to global scope for manual refresh
-            window.refreshAllData = async function() {
-                console.log('Manual refresh triggered...');
-                await initializeApplication();
-                showNotification('Data refreshed successfully!', 'success');
-            };
-
-            // Start the initialization process immediately
-            initializeApplication();
-
-            // Close modals when clicking outside
-            window.addEventListener('click', function(event) {
-                if (event.target.classList.contains('modal')) {
-                    event.target.style.display = 'none';
-                }
-            });
-
-            // Add keyboard shortcut for manual refresh (Ctrl+R alternative)
-            document.addEventListener('keydown', function(event) {
-                if (event.ctrlKey && event.key === 'u') {
-                    event.preventDefault();
-                    window.refreshAllData();
-                }
-            });
-
-            console.log('Application initialized with enhanced data loading');
-        });
-    </script>
+</div>
+
+<!-- Include Modals -->
+<div id="modals-container"></div>
+
+<!-- Include JavaScript files -->
+<script src="js/app.js"></script>
+<script src="js/api.js"></script>
+<script src="js/render.js"></script>
+<script src="js/forms.js"></script>
+<script src="js/init.js"></script>
+
+<!-- Load modals -->
+<script>
+    // Load modals into the container
+    fetch('modals.html')
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('modals-container').innerHTML = html;
+        })
+        .catch(error => console.log('Modals not found, using inline modals'));
+</script>
 </body>
 </html>

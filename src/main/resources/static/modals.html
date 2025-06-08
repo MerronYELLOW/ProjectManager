@@ -1,0 +1,131 @@
+<!-- Project Modal -->
+<div id="project-modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="hideModal('project-modal')">&times;</span>
+        <h3>Add New Project</h3>
+        <form id="project-form">
+            <div class="form-group">
+                <label for="project-name">Project Name</label>
+                <input type="text" id="project-name" required>
+            </div>
+            <div class="form-group">
+                <label for="project-description">Description</label>
+                <textarea id="project-description" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="project-status">Status</label>
+                <select id="project-status">
+                    <option value="PENDING">Pending</option>
+                    <option value="IN_PROGRESS">In Progress</option>
+                    <option value="COMPLETED">Completed</option>
+                    <option value="CANCELLED">Cancelled</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="project-importance">Importance</label>
+                <select id="project-importance">
+                    <option value="LOW">Low</option>
+                    <option value="MEDIUM">Medium</option>
+                    <option value="HIGH">High</option>
+                    <option value="STRATEGIC">Strategic</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="project-due-date">Due Date</label>
+                <input type="date" id="project-due-date">
+            </div>
+            <button type="submit" class="btn">Create Project</button>
+        </form>
+    </div>
+</div>
+
+<!-- User Modal -->
+<div id="user-modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="hideModal('user-modal')">&times;</span>
+        <h3>Add New User</h3>
+        <form id="user-form">
+            <div class="form-group">
+                <label for="user-name">Name</label>
+                <input type="text" id="user-name" required>
+            </div>
+            <div class="form-group">
+                <label for="user-email">Email</label>
+                <input type="email" id="user-email" required>
+            </div>
+            <div class="form-group">
+                <label for="user-password">Password</label>
+                <input type="password" id="user-password" required>
+            </div>
+            <div class="form-group">
+                <label for="user-role">Role</label>
+                <select id="user-role">
+                    <option value="EMPLOYEE">Employee</option>
+                    <option value="PROJECT_CREATOR">Project Creator</option>
+                    <option value="PROJECT_LEAD">Project Lead</option>
+                    <option value="DIRECT_SUPERVISOR">Direct Supervisor</option>
+                    <option value="SUPER_USER">Super User</option>
+                    <option value="ADMIN">Admin</option>
+                </select>
+            </div>
+            <button type="submit" class="btn">Create User</button>
+        </form>
+    </div>
+</div>
+
+<!-- Task Modal -->
+<div id="task-modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="hideModal('task-modal')">&times;</span>
+        <h3>Add New Task</h3>
+        <form id="task-form">
+            <div class="form-group">
+                <label for="task-name">Task Name</label>
+                <input type="text" id="task-name" required>
+            </div>
+            <div class="form-group">
+                <label for="task-description">Description</label>
+                <textarea id="task-description" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="task-status">Status</label>
+                <select id="task-status">
+                    <option value="TODO">To Do</option>
+                    <option value="IN_PROGRESS">In Progress</option>
+                    <option value="UNDER_REVIEW">Under Review</option>
+                    <option value="COMPLETED">Completed</option>
+                    <option value="REJECTED">Rejected</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="task-importance">Importance</label>
+                <select id="task-importance">
+                    <option value="LOW">Low</option>
+                    <option value="MEDIUM">Medium</option>
+                    <option value="HIGH">High</option>
+                    <option value="CRITICAL">Critical</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="task-due-date">Due Date</label>
+                <input type="date" id="task-due-date">
+            </div>
+            <button type="submit" class="btn">Create Task</button>
+        </form>
+    </div>
+</div>
+
+<!-- Team Modal -->
+<div id="team-modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="hideModal('team-modal')">&times;</span>
+        <h3>Add New Team</h3>
+        <form id="team-form">
+            <div class="form-group">
+                <label for="team-name">Team Name</label>
+                <input type="text" id="team-name" required>
+            </div>
+            <button type="submit" class="btn">Create Team</button>
+        </form>
+    </div>
+</div>
