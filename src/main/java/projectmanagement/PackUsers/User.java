@@ -1,19 +1,19 @@
 package projectmanagement.PackUsers;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import projectmanagement.Enums.Enums.Role;
 
 import java.util.HashSet;
-import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.NoArgsConstructor;
 import projectmanagement.Projects.Project;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import projectmanagement.Projects.Task;
 
-import java.util.ArrayList;
 import java.util.Set;
 
 @Entity
@@ -26,16 +26,21 @@ public class User {
     private Long id;
 
     @Column(nullable = false, unique = true)
+    @NotNull
+    @Email
     private String email;
 
     @Column(nullable = false)
+    @NotNull
     private String password;
 
     @Column(nullable = false)
+    @NotNull
     private String name;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @NotNull
     private Role role;
 
     @ManyToOne

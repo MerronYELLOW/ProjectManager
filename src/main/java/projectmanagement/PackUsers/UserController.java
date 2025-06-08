@@ -1,7 +1,10 @@
 package projectmanagement.PackUsers;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -17,16 +20,15 @@ public class UserController {
         this.userService = userService;
     }
 
-//    /**
-//     * Endpoint do tworzenia nowego użytkownika przez Super Usera
-//     */
-//    @PostMapping
-//    public ResponseEntity<User> createUser(@Valid @RequestBody UserCreation userCreation,
-//                                              @AuthenticationPrincipal User currentUser) {
-//        UserDTO createdUser = userService.createUser(userCreation, currentUser);
-//        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
-//    }
-
+    /**
+     * Endpoint do tworzenia nowego użytkownika przez Super Usera
+     */
+    // @AuthenticationPrincipal User currentUser
+    @PostMapping
+    public ResponseEntity<User> createUser(@Valid @RequestBody UserBean userBean) {
+        User createdUser = userService.createUser(userBean);
+        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+    }
     /**
      * Endpoint do pobierania użytkownika po ID
      */

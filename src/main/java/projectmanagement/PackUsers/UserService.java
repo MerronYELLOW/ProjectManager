@@ -15,13 +15,15 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final TeamRepository teamRepository;
-    // private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, TeamRepository teamRepository) {
+    public UserService(UserRepository userRepository,
+                       TeamRepository teamRepository,
+                       PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.teamRepository = teamRepository;
-        // this.passwordEncoder = passwordEncoder;
+        this.passwordEncoder = passwordEncoder;
     }
 
 //    /**
@@ -58,7 +60,31 @@ public class UserService {
 //                    .orElseThrow(() -> new ResourceNotFoundException("Zespół o podanym ID nie istnieje"));
 //            newUser.setTeam(team);
 //        }
-//
+
+    @Transactional
+    public User createUser(UserBean userBean) { //, User currentUser
+        // Sprawdzenie czy osoba tworząca ma odpowiednie uprawnienia
+//        if (!currentUser.getRole().equals(Role.SUPER_USER) && !currentUser.getRole().equals(Role.ADMIN)) {
+//            throw new UnauthorizedOperationException("Tylko Super User i Admin mogą tworzyć nowych użytkowników");
+//        }
+
+        // Sprawdzenie czy użytkownik z podanym emailem już istnieje
+        if (userRepository.existsByEmail(userBean.getEmail())) {
+            throw new UserAlreadyExistsException("Użytkownik z podanym adresem email już istnieje");
+        }
+
+        User newUser = new User();
+        newUser.setEmail(userBean.getEmail());
+        newUser.setName(userBean.getName());
+        newUser.setRole(userBean.getRole());
+
+         // Hashowanie hasła
+         newUser.setPassword(passwordEncoder.encode(userBean.getPassword()));
+
+        // Zapisanie użytkownika w bazie danych
+        return userRepository.save(newUser);
+    }
+
 //        User savedUser = userRepository.save(newUser);
 //
 //        // Konwersja do DTO (bez hasła)
@@ -99,27 +125,6 @@ public class UserService {
 //        }
 //
 //        User savedSuperUser = userRepository.save(newSuperUser);
-//
-//        // Konwersja do DTO (bez hasła)
-//        return convertToDTO(savedSuperUser);
-//    }
-//
-//    /**
-//     * Metoda pomocnicza do konwersji User -> projectmanagement.Enums.Enums.PackUsers.UserDTO
-//     */
-//    private UserDTO convertToDTO(User user) {
-//        UserDTO userDTO = new UserDTO();
-//        userDTO.setId(user.getId());
-//        userDTO.setEmail(user.getEmail());
-//        userDTO.setName(user.getName());
-//        userDTO.setRole(user.getRole());
-//
-//        if (user.getTeam() != null) {
-//            userDTO.setTeamId(user.getTeam().getTeamID());
-//        }
-//
-//        return userDTO;
-//    }
 
     /**
      * Pobieranie użytkownika po ID
