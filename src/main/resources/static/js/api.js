@@ -187,6 +187,8 @@ async function createTask(taskData) {
 }
 
 async function createUser(userData) {
+    console.log('API: Creating user with data:', userData);
+
     try {
         const response = await fetch('/api/users', {
             method: 'POST',
@@ -197,18 +199,47 @@ async function createUser(userData) {
             body: JSON.stringify(userData)
         });
 
+        console.log('API: Response status:', response.status);
+        console.log('API: Response headers:', response.headers);
+
         if (response.ok) {
             const newUser = await response.json();
             console.log('User created successfully:', newUser);
             return { success: true, data: newUser };
         } else {
-            const errorText = await response.text();
-            console.error('Server error:', response.status, errorText);
-            return { success: false, error: 'Error creating user. Please try again.' };
+            let errorMessage = 'Error creating user. Please try again.';
+
+            try {
+                // Try to parse as JSON first
+                const errorData = await response.json();
+                console.log('API: Error response data:', errorData);
+
+                if (errorData.error) {
+                    errorMessage = errorData.error;
+                } else if (errorData.message) {
+                    errorMessage = errorData.message;
+                } else if (typeof errorData === 'string') {
+                    errorMessage = errorData;
+                }
+            } catch (jsonError) {
+                console.log('API: Could not parse error as JSON, trying text...');
+                try {
+                    const errorText = await response.text();
+                    console.log('API: Error response text:', errorText);
+                    if (errorText) {
+                        errorMessage = errorText;
+                    }
+                } catch (textError) {
+                    console.error('API: Could not read error response:', textError);
+                }
+            }
+
+            console.error('Server error creating user:', response.status, errorMessage);
+            return { success: false, error: errorMessage };
         }
     } catch (error) {
-        console.error('Error creating user:', error);
-        return { success: false, error: 'Network error. Please check your connection.' };
+        console.error('Network error creating user:', error);
+        return { success: false, error: 'Network error. Please check your connection and try again.' };
     }
 }
 

@@ -2,7 +2,13 @@
 
 // PROJECT FORM HANDLER
 function initializeProjectForm() {
-    document.getElementById('project-form').addEventListener('submit', async function(e) {
+    const form = document.getElementById('project-form');
+    if (!form) {
+        console.error('Project form not found');
+        return;
+    }
+
+    form.addEventListener('submit', async function(e) {
         e.preventDefault();
 
         const dueDateValue = document.getElementById('project-due-date').value;
@@ -51,7 +57,13 @@ function initializeProjectForm() {
 
 // TASK FORM HANDLER
 function initializeTaskForm() {
-    document.getElementById('task-form').addEventListener('submit', async function(e) {
+    const form = document.getElementById('task-form');
+    if (!form) {
+        console.error('Task form not found');
+        return;
+    }
+
+    form.addEventListener('submit', async function(e) {
         e.preventDefault();
 
         // Get form elements with error checking
@@ -114,19 +126,65 @@ function initializeTaskForm() {
 
 // USER FORM HANDLER
 function initializeUserForm() {
-    document.getElementById('user-form').addEventListener('submit', async function(e) {
+    const form = document.getElementById('user-form');
+    if (!form) {
+        console.error('User form not found - this is likely why user creation is not working');
+        setTimeout(() => {
+            // Try again after a short delay
+            const retryForm = document.getElementById('user-form');
+            if (retryForm) {
+                console.log('User form found on retry, initializing...');
+                setupUserFormHandler(retryForm);
+            } else {
+                console.error('User form still not found after retry');
+            }
+        }, 1000);
+        return;
+    }
+
+    setupUserFormHandler(form);
+}
+
+function setupUserFormHandler(form) {
+    form.addEventListener('submit', async function(e) {
         e.preventDefault();
+        console.log('User form submitted');
+
+        const nameField = document.getElementById('user-name');
+        const emailField = document.getElementById('user-email');
+        const passwordField = document.getElementById('user-password');
+        const roleField = document.getElementById('user-role');
+
+        if (!nameField || !emailField || !passwordField || !roleField) {
+            console.error('User form fields not found:', {
+                name: !!nameField,
+                email: !!emailField,
+                password: !!passwordField,
+                role: !!roleField
+            });
+            showNotification('Form fields not found. Please refresh the page.', 'error');
+            return;
+        }
 
         const userData = {
-            name: document.getElementById('user-name').value.trim(),
-            email: document.getElementById('user-email').value.trim(),
-            password: document.getElementById('user-password').value.trim(),
-            role: document.getElementById('user-role').value
+            name: nameField.value.trim(),
+            email: emailField.value.trim(),
+            password: passwordField.value.trim(),
+            role: roleField.value
         };
+
+        console.log('User data to send:', userData);
 
         // Basic validation
         if (!userData.name || !userData.email || !userData.password) {
             showNotification('All fields are required!', 'error');
+            return;
+        }
+
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(userData.email)) {
+            showNotification('Please enter a valid email address!', 'error');
             return;
         }
 
@@ -138,17 +196,23 @@ function initializeUserForm() {
             users.push(result.data);
             renderUsers();
             hideModal('user-modal');
-            document.getElementById('user-form').reset();
+            form.reset();
             showNotification('User created successfully!', 'success');
         } else {
-            showNotification(result.error, 'error');
+            showNotification(result.error || 'Error creating user', 'error');
         }
     });
 }
 
 // TEAM FORM HANDLER
 function initializeTeamForm() {
-    document.getElementById('team-form').addEventListener('submit', async function(e) {
+    const form = document.getElementById('team-form');
+    if (!form) {
+        console.error('Team form not found');
+        return;
+    }
+
+    form.addEventListener('submit', async function(e) {
         e.preventDefault();
 
         const teamData = {
@@ -179,8 +243,14 @@ function initializeTeamForm() {
 
 // Initialize all form handlers
 function initializeForms() {
-    initializeProjectForm();
-    initializeTaskForm();
-    initializeUserForm();
-    initializeTeamForm();
+    console.log('Initializing forms...');
+
+    // Add a small delay to ensure all DOM elements are ready
+    setTimeout(() => {
+        initializeProjectForm();
+        initializeTaskForm();
+        initializeUserForm();
+        initializeTeamForm();
+        console.log('All forms initialized');
+    }, 100);
 }

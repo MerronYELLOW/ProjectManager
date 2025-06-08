@@ -36,8 +36,29 @@ document.addEventListener('DOMContentLoaded', function() {
         showNotification('Data refreshed successfully!', 'success');
     };
 
-    // Initialize form handlers
-    initializeForms();
+    // Load modals and then initialize forms
+    async function loadModalsAndInitialize() {
+        try {
+            const response = await fetch('modals.html');
+            if (response.ok) {
+                const html = await response.text();
+                document.getElementById('modals-container').innerHTML = html;
+                console.log('Modals loaded successfully');
+
+                // Initialize form handlers AFTER modals are loaded
+                initializeForms();
+            } else {
+                console.error('Failed to load modals.html');
+                showNotification('Error loading modals. Some features may not work.', 'error');
+            }
+        } catch (error) {
+            console.error('Error loading modals:', error);
+            showNotification('Error loading modals. Some features may not work.', 'error');
+        }
+    }
+
+    // Load modals first, then initialize everything else
+    loadModalsAndInitialize();
 
     // Start the initialization process immediately
     initializeApplication();
