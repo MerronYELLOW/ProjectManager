@@ -1,3 +1,4 @@
+// Replace your ProjectController.java with this enhanced version:
 package projectmanagement.Projects;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,9 @@ public class ProjectController {
     @GetMapping
     public ResponseEntity<List<Project>> getAllProjects() {
         try {
+            System.out.println("GET /api/projects - Fetching all projects");
             List<Project> projects = projectService.getAllProjects();
+            System.out.println("Found " + projects.size() + " projects");
             return ResponseEntity.ok(projects);
         } catch (Exception e) {
             System.err.println("Error fetching projects: " + e.getMessage());
@@ -33,14 +36,25 @@ public class ProjectController {
     @PostMapping
     public ResponseEntity<?> createProject(@RequestBody Project p) {
         try {
+            System.out.println("POST /api/projects - Creating new project");
+            System.out.println("Received project data: " + p);
+            System.out.println("Project name: " + p.getName());
+            System.out.println("Project description: " + p.getDescription());
+            System.out.println("Project status: " + p.getStatus());
+            System.out.println("Project importance: " + p.getImportance());
+            System.out.println("Project due date: " + p.getDueDate());
+            System.out.println("Project lead: " + p.getProjectLead());
+
             // Validate input
             if (p.getName() == null || p.getName().trim().isEmpty()) {
+                System.err.println("Validation failed: Project name is required");
                 Map<String, String> error = new HashMap<>();
                 error.put("error", "Project name is required");
                 return ResponseEntity.badRequest().body(error);
             }
 
             Project createdProject = projectService.createProject(p);
+            System.out.println("Project created successfully with ID: " + createdProject.getId());
             return ResponseEntity.status(HttpStatus.CREATED).body(createdProject);
         } catch (Exception e) {
             System.err.println("Error creating project: " + e.getMessage());
@@ -55,9 +69,11 @@ public class ProjectController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getProjectById(@PathVariable Long id) {
         try {
+            System.out.println("GET /api/projects/" + id + " - Fetching project by ID");
             Project project = projectService.getProjectById(id);
             return ResponseEntity.ok(project);
         } catch (ResourceNotFoundException e) {
+            System.err.println("Project not found: " + e.getMessage());
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
@@ -74,9 +90,11 @@ public class ProjectController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateProject(@PathVariable Long id, @RequestBody Project project) {
         try {
+            System.out.println("PUT /api/projects/" + id + " - Updating project");
             Project updatedProject = projectService.updateProject(id, project);
             return ResponseEntity.ok(updatedProject);
         } catch (ResourceNotFoundException e) {
+            System.err.println("Project not found for update: " + e.getMessage());
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
@@ -93,9 +111,11 @@ public class ProjectController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProject(@PathVariable Long id) {
         try {
+            System.out.println("DELETE /api/projects/" + id + " - Deleting project");
             projectService.deleteProject(id);
             return ResponseEntity.noContent().build();
         } catch (ResourceNotFoundException e) {
+            System.err.println("Project not found for deletion: " + e.getMessage());
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
@@ -107,5 +127,11 @@ public class ProjectController {
             error.put("error", "Failed to delete project: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
         }
+    }
+
+    // Add OPTIONS endpoint for preflight requests
+    @RequestMapping(method = RequestMethod.OPTIONS)
+    public ResponseEntity<?> handleOptions() {
+        return ResponseEntity.ok().build();
     }
 }
