@@ -45,3 +45,4 @@ src/main/resources/resources/application.yml
 /.idea/
 src/main/resources/application.properties
 /.idea
+src/main/resources/application.properties
